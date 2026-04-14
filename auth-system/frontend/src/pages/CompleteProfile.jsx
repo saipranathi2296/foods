@@ -104,7 +104,7 @@ const CompleteProfile = () => {
             background: 'var(--grad-orange)', marginBottom: '1rem',
             boxShadow: '0 4px 10px rgba(245, 158, 11, 0.4)'
           }}>
-            <ShieldCheck size={32} color="#081b22" />
+            <ShieldCheck size={32} color="#ffffff" />
           </div>
           <h2 style={{ marginBottom: '0.5rem' }}>Complete Profile</h2>
           <p>Almost there! Tell us a bit more.</p>

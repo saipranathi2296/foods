@@ -79,7 +79,7 @@ const PostItemForm = ({ onPostSuccess }) => {
       <div className="clay-card-inset">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
           <div style={{ background: 'var(--grad-primary)', padding: '0.5rem', borderRadius: 'var(--radius-sm)' }}>
-            <ShoppingBag size={20} color="#081b22" />
+            <ShoppingBag size={20} color="#ffffff" />
           </div>
           <h3 style={{ margin: 0 }}>Post an Item for Swap or Donate</h3>
         </div>
@@ -113,7 +113,7 @@ const PostItemForm = ({ onPostSuccess }) => {
                 <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--accent)' }}>
                   <ArrowRightLeft size={14} /> What I want in return (Mandatory)
                 </label>
-                <input type="text" name="returnItemDetails" className="form-input" style={{ borderColor: 'rgba(6, 182, 212, 0.4)' }} required value={formData.returnItemDetails} onChange={handleChange} placeholder="e.g. Calculator, physics book..." />
+                <input type="text" name="returnItemDetails" className="form-input" style={{ borderColor: 'rgba(16, 185, 129, 0.4)' }} required value={formData.returnItemDetails} onChange={handleChange} placeholder="e.g. Calculator, physics book..." />
               </div>
             )}
             
@@ -173,7 +173,7 @@ const PostItemForm = ({ onPostSuccess }) => {
                 justifyContent: 'center',
                 gap: '1rem'
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'rgba(6, 182, 212, 0.05)'; }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'rgba(16, 185, 129, 0.05)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--clay-border-2)'; e.currentTarget.style.background = 'rgba(0,0,0,0.1)'; }}
             >
               {!imagePreview ? (

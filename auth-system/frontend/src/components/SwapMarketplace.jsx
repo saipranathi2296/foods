@@ -108,7 +108,7 @@ const SwapMarketplace = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
       {/* Top Filter Bar */}
-      <div className="clay-card-inset" style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', alignItems: 'center', background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.2)' }}>
+      <div className="clay-card-inset" style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', alignItems: 'center', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent)' }}>
           <Filter size={20} />
           <span style={{ fontWeight: 600 }}>Filters</span>
@@ -152,7 +152,7 @@ const SwapMarketplace = () => {
           {items.map(item => (
             <div key={item._id} className="clay-card" style={{ display: 'flex', flexDirection: 'column', padding: 0 }}>
               
-              <div style={{ position: 'relative', height: '220px', background: 'rgba(0,0,0,0.5)' }}>
+              <div style={{ position: 'relative', height: '220px', background: 'rgba(0,0,0,0.1)' }}>
                 <div style={{ position: 'absolute', top: '0.75rem', right: '0.75rem', zIndex: 10 }}>
                   <span className={`badge ${item.exchangeType === 'swap' ? 'badge-aqua' : 'badge-orange'}`} style={{ backdropFilter: 'blur(10px)' }}>
                     {item.exchangeType === 'swap' ? <><ArrowRightLeft size={12} /> Swap</> : <><Heart size={12} /> Donate</>}
@@ -170,9 +170,9 @@ const SwapMarketplace = () => {
                 <div>
                   <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.2rem', color: 'var(--text-primary)' }}>{item.itemName}</h3>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                    <span style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.6rem', borderRadius: '4px', color: 'var(--text-muted)' }}>{item.category}</span>
-                    <span style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.6rem', borderRadius: '4px', color: 'var(--text-muted)' }}>Qty: {item.quantity}</span>
-                    <span style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.6rem', borderRadius: '4px', color: 'var(--text-muted)' }}>{item.condition}</span>
+                    <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.03)', padding: '0.2rem 0.6rem', borderRadius: '4px', color: 'var(--text-muted)' }}>{item.category}</span>
+                    <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.03)', padding: '0.2rem 0.6rem', borderRadius: '4px', color: 'var(--text-muted)' }}>Qty: {item.quantity}</span>
+                    <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.03)', padding: '0.2rem 0.6rem', borderRadius: '4px', color: 'var(--text-muted)' }}>{item.condition}</span>
                   </div>
                   {item.description && (
                     <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.description}</p>
@@ -180,7 +180,7 @@ const SwapMarketplace = () => {
                 </div>
                 
                 {item.exchangeType === 'swap' && item.returnItemDetails && (
-                  <div style={{ padding: '0.75rem', background: 'rgba(6, 182, 212, 0.08)', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid var(--accent)' }}>
+                  <div style={{ padding: '0.75rem', background: 'rgba(16, 185, 129, 0.08)', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid var(--accent)' }}>
                     <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 700, marginBottom: '0.2rem' }}>Looking For</div>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>{item.returnItemDetails}</div>
                   </div>
@@ -218,7 +218,7 @@ const SwapMarketplace = () => {
               </button>
             </div>
 
-            <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: 'var(--radius-md)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ background: 'rgba(0,0,0,0.03)', padding: '1rem', borderRadius: 'var(--radius-md)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <img src={`http://localhost:5000${selectedItem.image}`} style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover' }} alt="item" />
               <div>
                 <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>You are requesting</div>

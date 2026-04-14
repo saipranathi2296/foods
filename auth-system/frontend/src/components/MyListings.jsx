@@ -127,7 +127,7 @@ const MyListings = () => {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {item.requests && item.requests.map(req => (
-                  <div key={req._id} className="clay-card-inset" style={{ padding: '1.25rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div key={req._id} className="clay-card-inset" style={{ padding: '1.25rem', border: '1px solid rgba(0,0,0,0.03)' }}>
                     <div style={{ display: 'flex', gap: '1.25rem' }}>
                       {req.swapImage && (
                         <img 
@@ -150,7 +150,7 @@ const MyListings = () => {
                         <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>{req.requesterId?.email || 'No email'}</p>
                         
                         {req.offeredItemDetails && (
-                          <div style={{ marginBottom: '0.75rem', padding: '0.75rem', background: 'rgba(0,0,0,0.3)', borderRadius: '6px' }}>
+                          <div style={{ marginBottom: '0.75rem', padding: '0.75rem', background: 'rgba(0,0,0,0.08)', borderRadius: '6px' }}>
                             <p style={{ fontSize: '0.85rem', margin: 0, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                               <ArrowRight size={14} color="var(--accent)" />
                               <strong>Offering:</strong> {req.offeredItemDetails}

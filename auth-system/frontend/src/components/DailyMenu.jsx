@@ -183,7 +183,7 @@ const DailyMenu = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <div className="clay-card-inset" style={{ padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.2)' }}>
+      <div className="clay-card-inset" style={{ padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
         <h3 style={{ margin: 0, fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-primary)' }}>
           <Calendar size={20} color="var(--accent)" /> Today
         </h3>
@@ -222,11 +222,11 @@ const DailyMenu = () => {
                       (item.replacementOption1 || item.replacementOption2);
 
                     return (
-                      <div key={idx} style={{ background: 'rgba(0,0,0,0.2)', padding: '1.25rem', borderRadius: 'var(--radius-md)' }}>
+                      <div key={idx} style={{ background: 'rgba(0,0,0,0.05)', padding: '1.25rem', borderRadius: 'var(--radius-md)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                           <h4 style={{ margin: 0, fontSize: '1.1rem' }}>{item.itemName}</h4>
                           {(item.replacementOption1 || item.replacementOption2) && (
-                            <span style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.6rem', borderRadius: '4px', color: 'var(--text-muted)' }}>
+                            <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.03)', padding: '0.2rem 0.6rem', borderRadius: '4px', color: 'var(--text-muted)' }}>
                               Has options
                             </span>
                           )}
@@ -240,7 +240,7 @@ const DailyMenu = () => {
                               style={{
                                 display: 'flex', alignItems: 'center', padding: '0.75rem 1rem', borderRadius: '8px',
                                 border: '1px solid',
-                                borderColor: selectedResponse === opt.value ? opt.color : 'rgba(255,255,255,0.05)',
+                                borderColor: selectedResponse === opt.value ? opt.color : 'rgba(0,0,0,0.03)',
                                 background: selectedResponse === opt.value ? `color-mix(in srgb, ${opt.color} 15%, transparent)` : 'transparent',
                                 color: selectedResponse === opt.value ? '#fff' : 'var(--text-secondary)',
                                 fontWeight: selectedResponse === opt.value ? 600 : 400,

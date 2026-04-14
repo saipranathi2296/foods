@@ -92,7 +92,7 @@ const LeftoverFoodForm = () => {
       <div className="clay-card-inset">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
           <div style={{ background: 'var(--grad-primary)', padding: '0.5rem', borderRadius: 'var(--radius-sm)' }}>
-            <Send size={20} color="#081b22" />
+            <Send size={20} color="#ffffff" />
           </div>
           <h3 style={{ margin: 0 }}>Post Leftover Food</h3>
         </div>
@@ -141,7 +141,7 @@ const LeftoverFoodForm = () => {
               <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <Camera size={16} /> Photo Proof of Food
               </label>
-              <input type="file" id="foodImageInput" accept="image/*" required onChange={handleImageChange} style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: 'var(--radius-sm)', width: '100%' }} />
+              <input type="file" id="foodImageInput" accept="image/*" required onChange={handleImageChange} style={{ background: 'rgba(0,0,0,0.05)', padding: '1rem', borderRadius: 'var(--radius-sm)', width: '100%' }} />
             </div>
           </div>
 
@@ -158,14 +158,14 @@ const LeftoverFoodForm = () => {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {leftovers.map(l => (
-              <div key={l._id} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 'var(--radius-md)', padding: '1.5rem', border: '1px solid var(--clay-border-2)' }}>
+              <div key={l._id} style={{ background: 'rgba(0,0,0,0.03)', borderRadius: 'var(--radius-md)', padding: '1.5rem', border: '1px solid var(--clay-border-2)' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', md: { flexDirection: 'row' }, gap: '1.5rem' }}>
                   
                   {l.foodImage && (
                     <img 
                       src={`http://localhost:5000${l.foodImage}`} 
                       alt="Food" 
-                      style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: 'var(--radius-sm)', background: 'rgba(0,0,0,0.5)' }} 
+                      style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: 'var(--radius-sm)', background: 'rgba(0,0,0,0.1)' }} 
                     />
                   )}
                   
@@ -194,7 +194,7 @@ const LeftoverFoodForm = () => {
                 </div>
 
                 {l.requestDetails && (
-                  <div style={{ marginTop: '1.5rem', background: 'rgba(6, 182, 212, 0.05)', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(6, 182, 212, 0.2)' }}>
+                  <div style={{ marginTop: '1.5rem', background: 'rgba(16, 185, 129, 0.05)', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
                     <h5 style={{ margin: '0 0 0.75rem 0', color: 'var(--accent)' }}>NGO Request Details</h5>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                       <div><b>NGO:</b> {l.requestDetails.ngoName}</div>

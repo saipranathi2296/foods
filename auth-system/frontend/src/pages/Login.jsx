@@ -67,9 +67,9 @@ const Login = () => {
           <div style={{ 
             display: 'inline-flex', padding: '1rem', borderRadius: '50%', 
             background: 'var(--grad-primary)', marginBottom: '1rem',
-            boxShadow: '0 4px 10px rgba(6, 182, 212, 0.4)'
+            boxShadow: '0 4px 10px rgba(16, 185, 129, 0.4)'
           }}>
-            <LogIn size={32} color="#081b22" />
+            <LogIn size={32} color="#ffffff" />
           </div>
           <h2 style={{ marginBottom: '0.5rem' }}>Welcome Back</h2>
           <p>Sign in to your account</p>

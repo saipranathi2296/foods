@@ -167,7 +167,7 @@ const FoodRequests = () => {
                   <div style={{ width: '100%', height: '100%', background: 'var(--clay-inset)' }}></div>
                 )}
                 <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
-                  <span className={`badge ${getBadgeCol(food.pickupStatus)}`} style={{ backdropFilter: 'blur(10px)', boxShadow: '0 4px 10px rgba(0,0,0,0.5)' }}>
+                  <span className={`badge ${getBadgeCol(food.pickupStatus)}`} style={{ backdropFilter: 'blur(10px)', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
                     {food.pickupStatus}
                   </span>
                 </div>
@@ -177,7 +177,7 @@ const FoodRequests = () => {
                 <div>
                   <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.3rem', color: 'var(--text-primary)' }}>{food.itemName}</h3>
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.6rem', borderRadius: '4px', color: 'var(--text-muted)' }}>
+                    <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.03)', padding: '0.2rem 0.6rem', borderRadius: '4px', color: 'var(--text-muted)' }}>
                       Quantity: {food.quantity}
                     </span>
                     <span style={{ fontSize: '0.75rem', background: food.foodType==='veg' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', color: food.foodType==='veg' ? 'var(--success)' : 'var(--danger)', padding: '0.2rem 0.6rem', borderRadius: '4px', textTransform: 'capitalize' }}>

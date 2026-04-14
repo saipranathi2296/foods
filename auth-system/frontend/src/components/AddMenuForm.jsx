@@ -81,7 +81,7 @@ const AddMenuForm = () => {
       <div className="clay-card-inset">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
           <div style={{ background: 'var(--grad-primary)', padding: '0.5rem', borderRadius: 'var(--radius-sm)' }}>
-            <Calendar size={20} color="#081b22" />
+            <Calendar size={20} color="#ffffff" />
           </div>
           <h3 style={{ margin: 0 }}>Add Daily Menu</h3>
         </div>
@@ -112,7 +112,7 @@ const AddMenuForm = () => {
             <label className="form-label" style={{ display: 'block', marginBottom: '1rem' }}>Food Items</label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {items.map((item, index) => (
-                <div key={index} style={{ background: 'rgba(0,0,0,0.2)', padding: '1.5rem', borderRadius: 'var(--radius-md)', position: 'relative' }}>
+                <div key={index} style={{ background: 'rgba(0,0,0,0.05)', padding: '1.5rem', borderRadius: 'var(--radius-md)', position: 'relative' }}>
                   {items.length > 1 && (
                     <button type="button" onClick={() => removeItem(index)} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '0.25rem' }}>
                       <Trash2 size={18} />
@@ -155,7 +155,7 @@ const AddMenuForm = () => {
         ) : (
           <div style={{ display: 'grid', gap: '1rem' }}>
             {menus.map(m => (
-              <div key={m._id} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
+              <div key={m._id} style={{ background: 'rgba(0,0,0,0.03)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid var(--clay-border-2)', paddingBottom: '0.75rem', marginBottom: '0.75rem' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -171,7 +171,7 @@ const AddMenuForm = () => {
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   {m.items.map((item, idx) => (
-                    <div key={idx} style={{ padding: '0.5rem', background: 'rgba(0,0,0,0.2)', borderRadius: 'var(--radius-sm)' }}>
+                    <div key={idx} style={{ padding: '0.5rem', background: 'rgba(0,0,0,0.05)', borderRadius: 'var(--radius-sm)' }}>
                       <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{item.itemName}</span>
                       {(item.replacementOption1 || item.replacementOption2) && (
                         <span style={{ color: 'var(--text-muted)', marginLeft: '0.5rem', fontSize: '0.85rem' }}>

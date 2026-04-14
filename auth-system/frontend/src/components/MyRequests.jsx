@@ -53,7 +53,7 @@ const MyRequests = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <div className="clay-card-inset" style={{ padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.2)' }}>
+      <div className="clay-card-inset" style={{ padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
         <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-primary)' }}>My Requests</h3>
         <button className="btn btn-ghost btn-sm" onClick={fetchMyRequests} disabled={loading}>
           {loading ? 'Refreshing...' : '🔄 Refresh'}
@@ -76,7 +76,7 @@ const MyRequests = () => {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
-              <div style={{ padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: 'var(--radius-sm)' }}>
+              <div style={{ padding: '1rem', background: 'rgba(0,0,0,0.05)', borderRadius: 'var(--radius-sm)' }}>
                 <p style={{ margin: '0 0 0.5rem 0', fontWeight: 600, fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Item Owner</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <div>
@@ -91,7 +91,7 @@ const MyRequests = () => {
               </div>
 
               {req.type === 'swap' && req.offeredItemDetails && (
-                <div style={{ padding: '1rem', background: 'rgba(6, 182, 212, 0.05)', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid var(--accent)' }}>
+                <div style={{ padding: '1rem', background: 'rgba(16, 185, 129, 0.05)', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid var(--accent)' }}>
                   <p style={{ margin: '0 0 0.25rem 0', fontWeight: 700, fontSize: '0.8rem', color: 'var(--accent)', textTransform: 'uppercase' }}>Your Offer</p>
                   <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-primary)' }}>{req.offeredItemDetails}</p>
                 </div>

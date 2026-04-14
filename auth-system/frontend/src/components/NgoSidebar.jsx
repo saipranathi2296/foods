@@ -26,8 +26,8 @@ const NgoSidebar = ({ activeTab, setActiveTab }) => {
               padding: '1rem',
               borderRadius: 'var(--radius-md)',
               background: isActive ? 'var(--grad-primary)' : 'transparent',
-              color: isActive ? '#081b22' : 'var(--text-primary)',
-              boxShadow: isActive ? '0 4px 12px rgba(6, 182, 212, 0.3)' : 'none',
+              color: isActive ? '#ffffff' : 'var(--text-primary)',
+              boxShadow: isActive ? '0 4px 12px rgba(16, 185, 129, 0.3)' : 'none',
               transition: 'all 0.2s',
               textAlign: 'left',
               width: '100%',
@@ -35,7 +35,7 @@ const NgoSidebar = ({ activeTab, setActiveTab }) => {
             }}
             onMouseEnter={(e) => {
               if(!isActive) {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                e.currentTarget.style.background = 'rgba(0,0,0,0.03)';
                 e.currentTarget.style.borderColor = 'var(--clay-border-2)';
               }
             }}

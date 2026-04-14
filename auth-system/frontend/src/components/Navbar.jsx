@@ -50,12 +50,12 @@ const Navbar = () => {
           background: 'var(--grad-primary)',
           padding: '0.5rem',
           borderRadius: 'var(--radius-sm)',
-          boxShadow: '0 4px 10px rgba(6,182,212,0.3)',
+          boxShadow: '0 4px 10px rgba(16, 185, 129, 0.3)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <Flame size={24} color="#081b22" />
+          <Flame size={24} color="#ffffff" />
         </div>
         <span style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '0.5px' }}>FoodShare</span>
       </Link>
@@ -63,7 +63,7 @@ const Navbar = () => {
       <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
         {user && (
           <>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(0,0,0,0.2)', padding: '0.5rem 1rem', borderRadius: 'var(--radius-pill)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(0,0,0,0.05)', padding: '0.5rem 1rem', borderRadius: 'var(--radius-pill)' }}>
               <User size={16} color="var(--accent)" />
               <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{user.name}</span>
               <span className="badge badge-aqua" style={{ marginLeft: '0.5rem' }}>{user.role}</span>

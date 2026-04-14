@@ -60,7 +60,7 @@ const Signup = () => {
             background: 'var(--grad-green)', marginBottom: '1rem',
             boxShadow: '0 4px 10px rgba(16, 185, 129, 0.4)'
           }}>
-            <UserPlus size={32} color="#081b22" />
+            <UserPlus size={32} color="#ffffff" />
           </div>
           <h2 style={{ marginBottom: '0.5rem' }}>Create Account</h2>
           <p>Join the FoodShare community</p>

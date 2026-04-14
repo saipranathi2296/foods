@@ -8,15 +8,23 @@ import { BarChart, Search, AlertCircle, TrendingUp } from 'lucide-react';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
-const COLOR_EATEN   = { bg: 'rgba(16,185,129,0.75)',  border: 'rgba(16,185,129,1)'  };
-const COLOR_PARTIAL = { bg: 'rgba(245,158,11,0.75)',  border: 'rgba(245,158,11,1)'  };
-const COLOR_WASTED  = { bg: 'rgba(239, 68, 68,0.75)', border: 'rgba(239, 68, 68,1)' };
-const REPLACEMENT_COLORS = [
-  '#4f46e5', '#38bdf8', '#a855f7', '#fb923c', '#22d3ee', '#f43f5e', '#84cc16', '#14b8a6'
-];
+const CHART_COLORS = {
+  emerald: { bg: 'rgba(16, 185, 129, 0.8)', border: '#10b981' },
+  rose: { bg: 'rgba(244, 63, 94, 0.8)', border: '#f43f5e' },
+  orange: { bg: 'rgba(249, 115, 22, 0.8)', border: '#f97316' },
+  sky: { bg: 'rgba(14, 165, 233, 0.8)', border: '#0ea5e9' },
+  violet: { bg: 'rgba(139, 92, 246, 0.8)', border: '#8b5cf6' },
+  amber: { bg: 'rgba(245, 158, 11, 0.8)', border: '#f59e0b' }
+};
 
-ChartJS.defaults.color = '#94a3b8';
+const COLOR_EATEN   = CHART_COLORS.emerald;
+const COLOR_PARTIAL = CHART_COLORS.amber;
+const COLOR_WASTED  = CHART_COLORS.rose;
+const REPLACEMENT_COLORS = Object.values(CHART_COLORS);
+
+ChartJS.defaults.color = '#475569';
 ChartJS.defaults.font.family = "'Outfit', sans-serif";
+ChartJS.defaults.font.size = 13;
 
 const Analytics = () => {
   const [date, setDate]         = useState('');
@@ -55,24 +63,49 @@ const Analytics = () => {
     }]
   } : null;
 
-  const eatenBarOptions = { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display:false }, y: { grid: { display: false } } } };
+  const eatenBarOptions = { 
+    indexAxis: 'y', 
+    responsive: true, 
+    maintainAspectRatio: false, 
+    plugins: { 
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        titleColor: '#0f172a',
+        bodyColor: '#334155',
+        borderColor: 'rgba(148, 163, 184, 0.2)',
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 8,
+        displayColors: false,
+      }
+    }, 
+    scales: { 
+      x: { display:false, grid: { display: false } }, 
+      y: { 
+        grid: { display: false }, 
+        ticks: { color: '#334155', font: { weight: '600' } } 
+      } 
+    } 
+  };
 
   const overallPieChart = data ? {
     labels: ['Completely Ate', 'Partially Ate', 'Did Not Eat', 'No Feedback'],
     datasets: [{
       data: [data.pieChartData.eaten, data.pieChartData.partial, data.pieChartData.wasted, Math.max(0, (data.totalStudents || 1) - data.respondedStudents)],
-      backgroundColor: [COLOR_EATEN.bg, COLOR_PARTIAL.bg, COLOR_WASTED.bg, 'rgba(255,255,255,0.1)'],
-      borderColor: [COLOR_EATEN.border, COLOR_PARTIAL.border, COLOR_WASTED.border, 'transparent'],
-      borderWidth: 0,
+      backgroundColor: [COLOR_EATEN.border, COLOR_PARTIAL.border, COLOR_WASTED.border, '#cbd5e1'],
+      borderColor: ['#ffffff', '#ffffff', '#ffffff', '#ffffff'],
+      borderWidth: 3,
+      hoverOffset: 4
     }]
   } : null;
 
   const groupedBarChart = data ? {
     labels: data.itemConsumptionData.map(d => d.itemName),
     datasets: [
-      { label: 'Completely Ate', data: data.itemConsumptionData.map(d => d.ate), backgroundColor: COLOR_EATEN.bg, borderRadius: 4 },
-      { label: 'Partially Ate', data: data.itemConsumptionData.map(d => d.partial), backgroundColor: COLOR_PARTIAL.bg, borderRadius: 4 },
-      { label: 'Did Not Eat', data: data.itemConsumptionData.map(d => d.wasted), backgroundColor: COLOR_WASTED.bg, borderRadius: 4 }
+      { label: 'Completely Ate', data: data.itemConsumptionData.map(d => d.ate), backgroundColor: COLOR_EATEN.bg, borderColor: COLOR_EATEN.border, borderWidth: 1, borderRadius: 6 },
+      { label: 'Partially Ate', data: data.itemConsumptionData.map(d => d.partial), backgroundColor: COLOR_PARTIAL.bg, borderColor: COLOR_PARTIAL.border, borderWidth: 1, borderRadius: 6 },
+      { label: 'Did Not Eat', data: data.itemConsumptionData.map(d => d.wasted), backgroundColor: COLOR_WASTED.bg, borderColor: COLOR_WASTED.border, borderWidth: 1, borderRadius: 6 }
     ]
   } : null;
 
@@ -136,7 +169,22 @@ const Analytics = () => {
             <div className="clay-card-inset">
               <h3 style={{ marginBottom: '1rem', fontSize: '1.2rem' }}>Total Consumption</h3>
               <div style={{ height: '250px' }}>
-                {overallPieChart && <Pie data={overallPieChart} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: 'white' } } } }} />}
+                {overallPieChart && <Pie data={overallPieChart} options={{ 
+                  responsive: true, 
+                  maintainAspectRatio: false, 
+                  plugins: { 
+                    legend: { position: 'right', labels: { color: '#334155', padding: 20, usePointStyle: true, pointStyle: 'circle' } },
+                    tooltip: {
+                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      titleColor: '#0f172a',
+                      bodyColor: '#334155',
+                      borderColor: 'rgba(148, 163, 184, 0.2)',
+                      borderWidth: 1,
+                      padding: 12,
+                      cornerRadius: 8
+                    }
+                  } 
+                }} />}
               </div>
             </div>
 
@@ -151,7 +199,26 @@ const Analytics = () => {
           <div className="clay-card-inset">
             <h3 style={{ marginBottom: '1.5rem', fontSize: '1.2rem' }}>Detailed Breakdown</h3>
             <div style={{ height: '350px' }}>
-              {groupedBarChart && <Bar data={groupedBarChart} options={{ responsive: true, maintainAspectRatio: false }} />}
+              {groupedBarChart && <Bar data={groupedBarChart} options={{ 
+                responsive: true, 
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { position: 'top', labels: { usePointStyle: true, padding: 20, color: '#334155' } },
+                  tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    titleColor: '#0f172a',
+                    bodyColor: '#334155',
+                    borderColor: 'rgba(148, 163, 184, 0.2)',
+                    borderWidth: 1,
+                    padding: 12,
+                    cornerRadius: 8
+                  }
+                },
+                scales: {
+                  x: { grid: { display: false }, ticks: { color: '#334155', font: { weight: '600' } } },
+                  y: { grid: { color: 'rgba(148, 163, 184, 0.1)' }, border: { dash: [4, 4] } }
+                }
+              }} />}
             </div>
           </div>
         </>
