@@ -1,36 +1,67 @@
 import React from 'react';
+import { CalendarDays, RefreshCw, PlusCircle, List, BellRing, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-const StudentSidebar = ({ activeTab, setActiveTab, onLogout }) => {
+const StudentSidebar = ({ activeTab, setActiveTab }) => {
   const tabs = [
-    { id: 'menu', label: 'Daily Menu', icon: 'M4 6h16M4 12h16M4 18h16' },
-    { id: 'marketplace', label: 'Swap & Share', icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4' },
-    { id: 'post-item', label: 'Post an Item', icon: 'M12 4v16m8-8H4' },
-    { id: 'my-listings', label: 'My Listings', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
-    { id: 'my-requests', label: 'My Requests', icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' }
+    { id: 'menu', label: 'Daily Menu', icon: CalendarDays },
+    { id: 'marketplace', label: 'Swap & Share', icon: RefreshCw },
+    { id: 'post-item', label: 'Post an Item', icon: PlusCircle },
+    { id: 'my-listings', label: 'My Listings', icon: List },
+    { id: 'my-requests', label: 'My Requests', icon: BellRing }
   ];
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-header">
-        <h2>Student Portal</h2>
-      </div>
-      <nav className="sidebar-nav">
-        {tabs.map(tab => (
-          <div 
+    <aside className="clay-card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', position: 'sticky', top: '7rem' }}>
+      <h3 style={{ marginBottom: '1.5rem', fontSize: '1.1rem', letterSpacing: '0.5px', color: 'var(--text-secondary)' }}>Dashboard Menu</h3>
+      
+      {tabs.map(tab => {
+        const Icon = tab.icon;
+        const isActive = activeTab === tab.id;
+        
+        return (
+          <button
             key={tab.id}
-            className={`nav-item ${activeTab === tab.id ? 'active' : ''}`}
             onClick={() => setActiveTab(tab.id)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '1rem',
+              borderRadius: 'var(--radius-md)',
+              background: isActive ? 'var(--grad-primary)' : 'transparent',
+              color: isActive ? '#081b22' : 'var(--text-primary)',
+              boxShadow: isActive ? '0 4px 12px rgba(6, 182, 212, 0.3)' : 'none',
+              transition: 'all 0.2s',
+              textAlign: 'left',
+              width: '100%',
+              border: isActive ? 'none' : '1px solid transparent',
+            }}
+            onMouseEnter={(e) => {
+              if(!isActive) {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                e.currentTarget.style.borderColor = 'var(--clay-border-2)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if(!isActive) {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.borderColor = 'transparent';
+              }
+            }}
           >
-            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
-              <path d={tab.icon}></path>
-            </svg>
-            <span>{tab.label}</span>
-          </div>
-        ))}
-      </nav>
-      <div className="sidebar-footer">
-        <button className="logout-btn" onClick={onLogout}>Logout</button>
-      </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <Icon size={20} />
+              <span style={{ fontWeight: isActive ? 700 : 500 }}>{tab.label}</span>
+            </div>
+            {isActive && (
+              <motion.div layoutId="active-indicator">
+                <ChevronRight size={18} />
+              </motion.div>
+            )}
+          </button>
+        );
+      })}
     </aside>
   );
 };

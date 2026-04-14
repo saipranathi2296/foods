@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import '../styles/Signup.css';
+import { UserCircle, User, Home, ShieldCheck } from 'lucide-react';
 
 const CompleteProfile = () => {
   const location = useLocation();
@@ -96,78 +96,101 @@ const CompleteProfile = () => {
   if (!location.state || loading) return null;
 
   return (
-    <div className="auth-container">
-      <div className="auth-card signup-card">
-        <h2>Complete Profile</h2>
-        <p className="auth-subtitle">Almost there! We just need a few more details.</p>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', padding: '2rem' }}>
+      <div className="clay-card" style={{ width: '100%', maxWidth: '460px', padding: '2.5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <div style={{ 
+            display: 'inline-flex', padding: '1rem', borderRadius: '50%', 
+            background: 'var(--grad-orange)', marginBottom: '1rem',
+            boxShadow: '0 4px 10px rgba(245, 158, 11, 0.4)'
+          }}>
+            <ShieldCheck size={32} color="#081b22" />
+          </div>
+          <h2 style={{ marginBottom: '0.5rem' }}>Complete Profile</h2>
+          <p>Almost there! Tell us a bit more.</p>
+        </div>
         
         {error && (
-          <div className="error-message">
-            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            {error}
+          <div className="alert alert-error" style={{ marginBottom: '1.5rem' }}>
+            <span>{error}</span>
           </div>
         )}
 
         {showOtp ? (
           <form onSubmit={handleOtpSubmit}>
             {devWarning && (
-              <div style={{ backgroundColor: '#fff3cd', color: '#856404', padding: '1rem', borderRadius: '8px', marginBottom: '1rem', border: '1px solid #ffeeba' }}>
-                <strong>Test Mode:</strong> {devWarning}
+              <div className="alert alert-warn" style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <strong>Test Mode</strong>
+                <span style={{ fontSize: '0.85rem' }}>{devWarning}</span>
               </div>
             )}
             <div className="form-group">
-              <label htmlFor="otp">Enter OTP Sent to Email</label>
+              <label className="form-label" htmlFor="otp">Enter 6-Digit OTP</label>
               <input 
                 type="text" 
                 id="otp" 
+                className="form-input"
+                style={{ letterSpacing: '4px', textAlign: 'center', fontSize: '1.25rem', fontWeight: 600 }}
                 value={otp} 
                 onChange={(e) => setOtp(e.target.value)} 
-                placeholder="6-digit OTP" 
+                placeholder="------" 
+                maxLength={6}
                 required 
               />
             </div>
-            <button type="submit" className="auth-button" disabled={isSubmitting}>
-              {isSubmitting ? 'Verifying...' : 'Verify OTP'}
+            <button type="submit" className="btn btn-primary btn-full" disabled={isSubmitting} style={{ marginTop: '1rem' }}>
+              {isSubmitting ? <span className="spinner"></span> : 'Verify OTP'}
             </button>
           </form>
         ) : (
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="role">Role / Panel *</label>
-              <select id="role" name="role" value={formData.role} onChange={handleChange} required>
-                <option value="student">Student</option>
-                <option value="mess">Mess Staff</option>
-                <option value="ngo">NGO</option>
-              </select>
+              <label className="form-label" htmlFor="role">Role / Panel</label>
+              <div style={{ position: 'relative' }}>
+                <UserCircle size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                <select id="role" name="role" className="form-select" style={{ paddingLeft: '2.75rem' }} value={formData.role} onChange={handleChange} required>
+                  <option value="student">Student</option>
+                  <option value="mess">Mess Staff</option>
+                  <option value="ngo">NGO</option>
+                </select>
+              </div>
             </div>
 
             {formData.role === 'student' && (
-              <div className="row">
-                <div className="col form-group">
-                  <label htmlFor="gender">Gender (optional)</label>
-                  <select id="gender" name="gender" value={formData.gender} onChange={handleChange}>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                  </select>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="gender">Gender</label>
+                  <div style={{ position: 'relative' }}>
+                    <User size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                    <select id="gender" name="gender" className="form-select" style={{ paddingLeft: '2.75rem' }} value={formData.gender} onChange={handleChange}>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
                 </div>
-                <div className="col form-group">
-                  <label htmlFor="hostelBlock">Hostel Block *</label>
-                  <input 
-                    type="text" 
-                    id="hostelBlock" 
-                    name="hostelBlock"
-                    value={formData.hostelBlock} 
-                    onChange={handleChange} 
-                    placeholder="e.g., Block A" 
-                    required
-                  />
+                <div className="form-group">
+                  <label className="form-label" htmlFor="hostelBlock">Hostel Block</label>
+                  <div style={{ position: 'relative' }}>
+                    <Home size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                    <input 
+                      type="text" 
+                      id="hostelBlock" 
+                      name="hostelBlock"
+                      className="form-input"
+                      style={{ paddingLeft: '2.75rem' }}
+                      value={formData.hostelBlock} 
+                      onChange={handleChange} 
+                      placeholder="Block A" 
+                      required
+                    />
+                  </div>
                 </div>
               </div>
             )}
 
-            <button type="submit" className="auth-button" disabled={isSubmitting}>
-              {isSubmitting ? 'Saving...' : 'Complete Profile'}
+            <button type="submit" className="btn btn-primary btn-full" disabled={isSubmitting} style={{ marginTop: '1rem' }}>
+              {isSubmitting ? <span className="spinner"></span> : 'Complete Registration'}
             </button>
           </form>
         )}

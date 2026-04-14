@@ -5,11 +5,9 @@ import Sidebar from '../components/Sidebar';
 import AddMenuForm from '../components/AddMenuForm';
 import LeftoverFoodForm from '../components/LeftoverFoodForm';
 import Analytics from '../components/Analytics';
-import '../styles/MessDashboard.css';
-import '../styles/MenuForm.css';
 
 const MessDashboard = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState('menu');
 
   if (!user || user.role !== 'mess') {
@@ -26,17 +24,19 @@ const MessDashboard = () => {
   };
 
   return (
-    <div className="dashboard-layout">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} onLogout={logout} />
+    <div style={{ display: 'flex', flexDirection: 'column', padding: '0 2rem', gap: '2rem', minHeight: '80vh', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
+      <header style={{ marginBottom: '1rem' }}>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '0.25rem' }}>Mess Operations</h1>
+        <p style={{ color: 'var(--accent)' }}>Manage your daily menus and track leftovers.</p>
+      </header>
       
-      <main className="dashboard-content">
-        <div className="dashboard-header">
-          <h1>Mess Staff Dashboard</h1>
-          <p>Welcome back, {user.name}. Manage daily menus and leftover food below.</p>
-        </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '2rem', alignItems: 'start' }}>
+        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         
-        {renderContent()}
-      </main>
+        <main className="clay-panel" style={{ minHeight: '600px' }}>
+          {renderContent()}
+        </main>
+      </div>
     </div>
   );
 };

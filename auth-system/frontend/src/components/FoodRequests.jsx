@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import '../styles/FoodRequests.css';
+import { Camera, Navigation, MessageCircle, MapPin, CheckCircle2, Clock } from 'lucide-react';
 
 const FoodRequests = () => {
   const [leftovers, setLeftovers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // States handling the forms
   const [activeRequestFoodId, setActiveRequestFoodId] = useState(null);
   const [requestDetails, setRequestDetails] = useState({ ngoName: '', personName: '', phoneNumber: '', pickupTime: '' });
   
@@ -128,165 +127,148 @@ const FoodRequests = () => {
     }
   };
 
-  const getBadgeClass = (status) => {
+  const getBadgeCol = (status) => {
     switch(status) {
-      case 'Requested': return 'status-requested';
-      case 'Accepted': return 'status-accepted';
-      case 'Collected': return 'status-collected';
-      case 'Completed': return 'status-completed';
-      default: return 'status-pending';
+      case 'Posted': return 'badge-aqua';
+      case 'Requested': return 'badge-orange';
+      case 'Accepted': return 'badge-purple';
+      case 'Collected': return 'badge-green';
+      case 'Completed': return 'badge-green';
+      default: return 'badge-aqua';
     }
   };
 
-  if (loading) return <div>Loading available food...</div>;
+  if (loading) return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '4rem', color: 'var(--text-muted)' }}>
+      <div className="spinner" style={{ marginBottom: '1rem' }}></div>
+      <div>Loading available food...</div>
+    </div>
+  );
 
   return (
-    <div className="food-requests-container">
-      {errorMsg && (
-        <div style={{ padding: '1rem', background: '#fee2e2', color: '#b91c1c', borderRadius: '8px', marginBottom: '1rem', fontWeight: 600 }}>
-          ⚠️ {errorMsg}
-        </div>
-      )}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      {errorMsg && <div className="alert alert-error" style={{ marginBottom: '1rem' }}>{errorMsg}</div>}
 
       {leftovers.length === 0 ? (
-        <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
-          <p style={{ color: 'var(--text-muted)' }}>No leftover food available at the moment.</p>
+        <div className="clay-card-inset" style={{ textAlign: 'center', padding: '4rem' }}>
+          <MessageCircle size={48} color="var(--clay-border-2)" style={{ marginBottom: '1rem' }} />
+          <h3 style={{ color: 'var(--text-secondary)' }}>No Food Available</h3>
+          <p style={{ color: 'var(--text-muted)', margin: 0 }}>There are no active leftover food postings.</p>
         </div>
       ) : (
-        <div className="requests-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
           {leftovers.map(food => (
-            <div key={food._id} className="food-card" style={{ display: 'flex', flexDirection: 'column' }}>
+            <div key={food._id} className="clay-card" style={{ padding: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
               
-              {food.foodImage && (
-                <img 
-                  src={`http://localhost:5000${food.foodImage}`} 
-                  alt="Food" 
-                  style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '8px 8px 0 0', margin: '-1.5rem -1.5rem 1rem -1.5rem', width: 'calc(100% + 3rem)' }} 
-                />
-              )}
-
-              <div className="food-header">
-                <h3 className="food-title">{food.itemName}</h3>
-                <span className={`food-type-badge type-${food.foodType}`}>
-                  {food.foodType}
-                </span>
-              </div>
-              
-              <div className="food-details">
-                <div className="detail-row">
-                  <span>🥡 Quantity: {food.quantity} units</span>
-                </div>
-                <div className="detail-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                  <span>🏛️ University: {food.universityName}</span>
-                  <button 
-                    onClick={() => handleGetDirections(food.universityName)}
-                    style={{
-                      background: 'rgba(59, 130, 246, 0.1)', color: 'var(--primary)',
-                      border: 'none', borderRadius: '4px', padding: '0.35rem 0.6rem',
-                      fontSize: '0.8rem', cursor: 'pointer', fontWeight: 'bold'
-                    }}
-                  >
-                    🚗 Get Directions
-                  </button>
-                </div>
-                <div className="detail-row">
-                  <span>⏰ Pickup Deadline: <strong>{food.comfortablePickupTime}</strong></span>
-                </div>
-                <div className="detail-row">
-                  <span>📅 Date: {new Date(food.date || food.createdAt).toLocaleDateString()}</span>
+              <div style={{ position: 'relative', height: '200px' }}>
+                {food.foodImage ? (
+                  <img src={`http://localhost:5000${food.foodImage}`} alt="Food" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <div style={{ width: '100%', height: '100%', background: 'var(--clay-inset)' }}></div>
+                )}
+                <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
+                  <span className={`badge ${getBadgeCol(food.pickupStatus)}`} style={{ backdropFilter: 'blur(10px)', boxShadow: '0 4px 10px rgba(0,0,0,0.5)' }}>
+                    {food.pickupStatus}
+                  </span>
                 </div>
               </div>
 
-              {/* ACTION AREA */}
-              <div className="food-actions" style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
-                {food.pickupStatus === 'Posted' && activeRequestFoodId !== food._id && (
-                   <button 
-                     className="action-btn"
-                     style={{ background: 'var(--primary)', width: '100%' }}
-                     onClick={() => setActiveRequestFoodId(food._id)}
-                   >
-                     Request Food
-                   </button>
-                )}
-
-                {/* Request Form */}
-                {activeRequestFoodId === food._id && (
-                  <div style={{ background: 'var(--background)', padding: '1rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <h5 style={{ margin: 0 }}>Request Details</h5>
-                    <input type="text" name="ngoName" placeholder="NGO Name" value={requestDetails.ngoName} onChange={handleRequestInput} style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)' }} />
-                    <input type="text" name="personName" placeholder="Collector Name" value={requestDetails.personName} onChange={handleRequestInput} style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)' }} />
-                    <input type="text" name="phoneNumber" placeholder="Phone Number" value={requestDetails.phoneNumber} onChange={handleRequestInput} style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)' }} />
-                    <input type="time" name="pickupTime" value={requestDetails.pickupTime} onChange={handleRequestInput} style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)' }} />
-                    
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <button onClick={() => submitRequest(food)} style={{ flex: 1, padding: '0.5rem', background: '#10B981', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>Submit Request</button>
-                      <button onClick={() => setActiveRequestFoodId(null)} style={{ flex: 1, padding: '0.5rem', background: '#64748b', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer' }}>Cancel</button>
+              <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
+                <div>
+                  <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.3rem', color: 'var(--text-primary)' }}>{food.itemName}</h3>
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.6rem', borderRadius: '4px', color: 'var(--text-muted)' }}>
+                      Quantity: {food.quantity}
+                    </span>
+                    <span style={{ fontSize: '0.75rem', background: food.foodType==='veg' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', color: food.foodType==='veg' ? 'var(--success)' : 'var(--danger)', padding: '0.2rem 0.6rem', borderRadius: '4px', textTransform: 'capitalize' }}>
+                      {food.foodType}
+                    </span>
+                  </div>
+                </div>
+                
+                <div style={{ background: 'var(--clay-inset)', padding: '1rem', borderRadius: 'var(--radius-sm)', display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <MapPin size={16} color="var(--accent)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{food.universityName}</div>
+                      <button onClick={() => handleGetDirections(food.universityName)} style={{ background: 'transparent', border: 'none', color: 'var(--accent)', cursor: 'pointer', padding: 0, fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.2rem', marginTop: '0.2rem', fontWeight: 600 }}>
+                        <Navigation size={10} /> Get Directions
+                      </button>
                     </div>
                   </div>
-                )}
-
-                {food.pickupStatus === 'Requested' && (
-                  <div className={`status-badge status-requested`}>
-                    Requested (Waiting for Mess Approval)
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Clock size={16} color="var(--accent)" /> Pickup Deadline: {food.comfortablePickupTime}
                   </div>
-                )}
+                </div>
 
-                {food.pickupStatus === 'Accepted' && activeCollectFoodId !== food._id && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <div className="status-badge status-accepted" style={{ marginBottom: '0.5rem' }}>Request Accepted!</div>
-                    <button 
-                      className="action-btn"
-                      style={{ background: '#10B981', width: '100%' }}
-                      onClick={() => setActiveCollectFoodId(food._id)}
-                    >
-                      Collect Food & Upload Proof
+                <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
+                  {food.pickupStatus === 'Posted' && activeRequestFoodId !== food._id && (
+                     <button className="btn btn-primary btn-full" onClick={() => setActiveRequestFoodId(food._id)}>
+                       Claim Food
+                     </button>
+                  )}
+
+                  {activeRequestFoodId === food._id && (
+                    <div className="clay-card-inset" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                      <h5 style={{ margin: 0, color: 'var(--accent)' }}>Collection Details</h5>
+                      <input type="text" name="ngoName" className="form-input form-input-sm" placeholder="NGO Name" value={requestDetails.ngoName} onChange={handleRequestInput} />
+                      <input type="text" name="personName" className="form-input form-input-sm" placeholder="Collector Name" value={requestDetails.personName} onChange={handleRequestInput} />
+                      <input type="text" name="phoneNumber" className="form-input form-input-sm" placeholder="Phone Number" value={requestDetails.phoneNumber} onChange={handleRequestInput} />
+                      <input type="time" name="pickupTime" className="form-input form-input-sm" value={requestDetails.pickupTime} onChange={handleRequestInput} />
+                      
+                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                        <button className="btn btn-primary btn-sm" style={{ flex: 1 }} onClick={() => submitRequest(food)}>Submit</button>
+                        <button className="btn btn-ghost btn-sm" style={{ flex: 1 }} onClick={() => setActiveRequestFoodId(null)}>Cancel</button>
+                      </div>
+                    </div>
+                  )}
+
+                  {food.pickupStatus === 'Requested' && (
+                    <div style={{ padding: '0.75rem', textAlign: 'center', background: 'rgba(245, 158, 11, 0.1)', color: 'var(--warning)', borderRadius: 'var(--radius-sm)', fontWeight: 600, fontSize: '0.85rem' }}>
+                      Waiting for Mess Approval
+                    </div>
+                  )}
+
+                  {food.pickupStatus === 'Accepted' && activeCollectFoodId !== food._id && (
+                    <button className="btn btn-primary btn-full" onClick={() => setActiveCollectFoodId(food._id)}>
+                      <Camera size={16} /> Collect & Upload Proof
                     </button>
-                  </div>
-                )}
+                  )}
 
-                {/* Collect Form */}
-                {activeCollectFoodId === food._id && (
-                  <div style={{ background: 'var(--background)', padding: '1rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <h5 style={{ margin: 0 }}>📸 Upload Collection Proof</h5>
-                    <input type="file" accept="image/*" onChange={(e) => setCollectionImage(e.target.files[0])} />
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <button onClick={() => submitCollect(food._id)} style={{ flex: 1, padding: '0.5rem', background: '#10B981', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>Mark Collected</button>
-                      <button onClick={() => setActiveCollectFoodId(null)} style={{ flex: 1, padding: '0.5rem', background: '#64748b', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer' }}>Cancel</button>
+                  {activeCollectFoodId === food._id && (
+                    <div className="clay-card-inset" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                      <h5 style={{ margin: 0, color: 'var(--accent)' }}>Upload Collection Proof</h5>
+                      <input type="file" className="form-input form-input-sm" accept="image/*" onChange={(e) => setCollectionImage(e.target.files[0])} />
+                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                        <button className="btn btn-primary btn-sm" style={{ flex: 1 }} onClick={() => submitCollect(food._id)}>Submit</button>
+                        <button className="btn btn-ghost btn-sm" style={{ flex: 1 }} onClick={() => setActiveCollectFoodId(null)}>Cancel</button>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {food.pickupStatus === 'Collected' && activeCompleteFoodId !== food._id && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <div className="status-badge status-collected" style={{ marginBottom: '0.5rem' }}>Food Collected Successfully</div>
-                    <button 
-                      className="action-btn"
-                      style={{ background: '#059669', width: '100%' }}
-                      onClick={() => setActiveCompleteFoodId(food._id)}
-                    >
-                      Complete Delivery (Upload Proof)
+                  {food.pickupStatus === 'Collected' && activeCompleteFoodId !== food._id && (
+                    <button className="btn btn-success btn-full" onClick={() => setActiveCompleteFoodId(food._id)}>
+                      <CheckCircle2 size={16} /> Mark Distributed
                     </button>
-                  </div>
-                )}
+                  )}
 
-                {/* Complete Form */}
-                {activeCompleteFoodId === food._id && (
-                  <div style={{ background: 'var(--background)', padding: '1rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <h5 style={{ margin: 0 }}>📸 Upload Final Delivery Proof</h5>
-                    <input type="file" accept="image/*" onChange={(e) => setDeliveryImage(e.target.files[0])} />
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <button onClick={() => submitComplete(food._id)} style={{ flex: 1, padding: '0.5rem', background: '#059669', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>Complete Delivery</button>
-                      <button onClick={() => setActiveCompleteFoodId(null)} style={{ flex: 1, padding: '0.5rem', background: '#64748b', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer' }}>Cancel</button>
+                  {activeCompleteFoodId === food._id && (
+                    <div className="clay-card-inset" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                      <h5 style={{ margin: 0, color: 'var(--success)' }}>Upload Distribution Proof</h5>
+                      <input type="file" className="form-input form-input-sm" accept="image/*" onChange={(e) => setDeliveryImage(e.target.files[0])} />
+                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                        <button className="btn btn-success btn-sm" style={{ flex: 1 }} onClick={() => submitComplete(food._id)}>Submit</button>
+                        <button className="btn btn-ghost btn-sm" style={{ flex: 1 }} onClick={() => setActiveCompleteFoodId(null)}>Cancel</button>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {food.pickupStatus === 'Completed' && (
-                  <div className="status-badge status-completed" style={{ background: 'rgba(5, 150, 105, 0.2)', color: '#059669', border: '1px solid currentColor' }}>
-                    🎉 Process Completed
-                  </div>
-                )}
-
+                  {food.pickupStatus === 'Completed' && (
+                    <div style={{ padding: '0.75rem', textAlign: 'center', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', color: 'var(--success)', borderRadius: 'var(--radius-sm)', fontWeight: 600, fontSize: '0.85rem' }}>
+                      Distribution Confirmed!
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           ))}

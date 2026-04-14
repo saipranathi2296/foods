@@ -1,42 +1,23 @@
 import React, { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
-import '../styles/FeedbackForm.css';
+import { Calendar, CheckCircle2, ChevronRight, Check, X, AlertCircle } from 'lucide-react';
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   Helpers
-───────────────────────────────────────────────────────────────────────────── */
 const getTodayStr = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 };
 
-// Channel name scoped to student ID — prevents cross-student bleed between tabs
 const makeChannelName = (studentId) => `mess_feedback_sync_${studentId}`;
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   Component
-   SOURCE OF TRUTH = MongoDB (via /api/feedback/status per meal).
-   Feedback is submitted in one shot per meal (all items together).
-   No localStorage used for feedback state.
-───────────────────────────────────────────────────────────────────────────── */
 const DailyMenu = () => {
   const { user } = useContext(AuthContext);
 
-  // Which mealTypes have been fully submitted by THIS student (from DB)
-  // key = mealType (e.g. "lunch"), value = Set of submitted itemNames
   const [submittedMeals, setSubmittedMeals] = useState({});
-
   const [menus, setMenus]       = useState([]);
   const [loading, setLoading]   = useState(true);
-
-  // Per-item response selections: { "lunch||Idli": "Completely Ate", ... }
   const [responses, setResponses] = useState({});
-
-  // Per-item replacement selections: { "lunch||Idli": "Roti", ... }
   const [replacements, setReplacements] = useState({});
-
-  // Per-meal submit errors / success
   const [mealErrors, setMealErrors]   = useState({});
   const [submitting, setSubmitting]   = useState({});
 
@@ -44,7 +25,6 @@ const DailyMenu = () => {
 
   const itemKey = (mealType, itemName) => `${mealType}||${itemName}`;
 
-  /* ── Cross-tab sync — scoped to THIS student ──────────────────────────── */
   useEffect(() => {
     if (!user?._id) return;
     if (typeof BroadcastChannel === 'undefined') return;
@@ -62,7 +42,6 @@ const DailyMenu = () => {
     return () => ch.close();
   }, [user?._id]);
 
-  /* ── On mount: fetch menus + load submission status from DB ────────────── */
   useEffect(() => {
     const init = async () => {
       const todayStr = getTodayStr();
@@ -72,7 +51,6 @@ const DailyMenu = () => {
     init();
   }, []);
 
-  /* ── After menus load, check DB status for each meal ───────────────────── */
   useEffect(() => {
     if (menus.length === 0) return;
     const todayStr = getTodayStr();
@@ -94,16 +72,9 @@ const DailyMenu = () => {
     }
   };
 
-  /**
-   * Ask the BACKEND if THIS student has already submitted feedback
-   * for a specific mealType on today's date.
-   * Updates submittedMeals[mealType] with the set of submitted item names.
-   */
   const fetchMealStatus = async (dateStr, mealType) => {
     try {
-      const { data } = await api.get(
-        `/feedback/status?date=${dateStr}&mealType=${mealType}`
-      );
+      const { data } = await api.get(`/feedback/status?date=${dateStr}&mealType=${mealType}`);
       if (data.submitted) {
         setSubmittedMeals(prev => ({
           ...prev,
@@ -115,43 +86,30 @@ const DailyMenu = () => {
     }
   };
 
-  /* ── Response selection handler ───────────────────────────────────────── */
   const handleResponseSelect = (mealType, itemName, value) => {
     const key = itemKey(mealType, itemName);
     setResponses(prev => ({ ...prev, [key]: value }));
-    // Clear any error for this meal when user makes a selection
     setMealErrors(prev => ({ ...prev, [mealType]: '' }));
   };
 
-  /* ── Replacement selection handler ────────────────────────────────────── */
   const handleReplacementSelect = (mealType, itemName, value) => {
     const key = itemKey(mealType, itemName);
     setReplacements(prev => ({ ...prev, [key]: value }));
   };
 
-  /* ── Submit all items for a meal ──────────────────────────────────────── */
   const handleSubmitMeal = useCallback(async (menu) => {
     const mealType = menu.mealType;
 
-    // ── Guard: already submitted
     if (submittedMeals[mealType]) {
-      setMealErrors(prev => ({
-        ...prev,
-        [mealType]: 'You have already submitted feedback for this meal.'
-      }));
+      setMealErrors(prev => ({ ...prev, [mealType]: 'You have already submitted feedback for this meal.' }));
       return;
     }
 
-    // ── Guard: date must be today
     if (new Date(menu.date).toDateString() !== new Date().toDateString()) {
-      setMealErrors(prev => ({
-        ...prev,
-        [mealType]: "Feedback can only be submitted for today's menu."
-      }));
+      setMealErrors(prev => ({ ...prev, [mealType]: "Feedback can only be submitted for today's menu." }));
       return;
     }
 
-    // ── Validate: every item must have a response
     const missingItems = [];
     for (const item of menu.items) {
       const key = itemKey(mealType, item.itemName);
@@ -160,14 +118,10 @@ const DailyMenu = () => {
       }
     }
     if (missingItems.length > 0) {
-      setMealErrors(prev => ({
-        ...prev,
-        [mealType]: `Please select feedback for: ${missingItems.join(', ')}`
-      }));
+      setMealErrors(prev => ({ ...prev, [mealType]: `Please select feedback for: ${missingItems.join(', ')}` }));
       return;
     }
 
-    // ── Build items payload
     const items = menu.items.map(item => {
       const key = itemKey(mealType, item.itemName);
       return {
@@ -181,30 +135,18 @@ const DailyMenu = () => {
     setMealErrors(prev => ({ ...prev, [mealType]: '' }));
 
     try {
-      await api.post('/feedback', {
-        date:     menu.date,
-        mealType: mealType,
-        items
-      });
+      await api.post('/feedback', { date: menu.date, mealType: mealType, items });
 
-      // Mark submitted locally
       const submittedItemNames = new Set(menu.items.map(i => i.itemName));
       setSubmittedMeals(prev => ({ ...prev, [mealType]: submittedItemNames }));
 
-      // Broadcast to other tabs of THIS student only
       try {
-        channelRef.current?.postMessage({
-          type:     'MEAL_SUBMITTED',
-          mealType: mealType,
-          items:    [...submittedItemNames]
-        });
+        channelRef.current?.postMessage({ type: 'MEAL_SUBMITTED', mealType: mealType, items: [...submittedItemNames] });
       } catch { /* channel closed */ }
 
     } catch (err) {
       const msg = err.response?.data?.message || 'Error submitting feedback. Please try again.';
-
       if (msg.toLowerCase().includes('already')) {
-        // DB says already submitted — re-fetch to sync state
         await fetchMealStatus(getTodayStr(), mealType);
       } else {
         setMealErrors(prev => ({ ...prev, [mealType]: msg }));
@@ -214,184 +156,141 @@ const DailyMenu = () => {
     }
   }, [responses, replacements, submittedMeals]);
 
-  /* ─────────────────────────────────────────────────────────────────────────
-     Render helpers
-  ───────────────────────────────────────────────────────────────────────── */
   const RESPONSE_OPTIONS = [
-    { value: 'Completely Ate', label: '✅ Completely Eaten',  className: 'btn-complete' },
-    { value: 'Partially Ate',  label: '⚠️ Partially Eaten',  className: 'btn-partial'  },
-    { value: 'Did Not Eat',    label: '❌ Not Eaten',         className: 'btn-none'     },
+    { value: 'Completely Ate', label: <><Check size={16}/> Completely Eaten</>, color: 'var(--success)' },
+    { value: 'Partially Ate',  label: <><AlertCircle size={16}/> Partially Eaten</>, color: 'var(--warning)' },
+    { value: 'Did Not Eat',    label: <><X size={16}/> Not Eaten</>, color: 'var(--danger)' },
   ];
 
-  /* ─────────────────────────────────────────────────────────────────────────
-     Render
-  ───────────────────────────────────────────────────────────────────────── */
   if (loading) {
     return (
-      <div style={{ padding: '2rem', color: 'var(--text-muted)' }}>
-        ⏳ Loading today's menu…
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '4rem', color: 'var(--text-muted)' }}>
+        <div className="spinner" style={{ marginBottom: '1rem' }}></div>
+        <div>Loading today's menu…</div>
       </div>
     );
   }
 
   if (menus.length === 0) {
     return (
-      <div className="card">
-        <h3>Today's Menu</h3>
-        <p style={{ color: 'var(--text-muted)' }}>No menu has been posted for today yet.</p>
+      <div className="clay-card-inset" style={{ textAlign: 'center', padding: '4rem' }}>
+        <Calendar size={48} color="var(--clay-border-2)" style={{ marginBottom: '1rem' }} />
+        <h3 style={{ color: 'var(--text-secondary)' }}>No Menu Posted</h3>
+        <p style={{ color: 'var(--text-muted)', margin: 0 }}>The mess hasn't posted a menu for today yet.</p>
       </div>
     );
   }
 
   return (
-    <div className="daily-menu-container">
-      <h3 className="menu-date">
-        {new Date().toLocaleDateString('en-US', {
-          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        })}
-      </h3>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <div className="clay-card-inset" style={{ padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.2)' }}>
+        <h3 style={{ margin: 0, fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-primary)' }}>
+          <Calendar size={20} color="var(--accent)" /> Today
+        </h3>
+        <span style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--accent)' }}>
+          {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+        </span>
+      </div>
 
-      {menus.map((menu) => {
-        const mealType    = menu.mealType;
-        const isDone      = !!submittedMeals[mealType];
-        const isSubmitting = !!submitting[mealType];
-        const errMsg      = mealErrors[mealType];
+      <div style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))' }}>
+        {menus.map((menu) => {
+          const mealType    = menu.mealType;
+          const isDone      = !!submittedMeals[mealType];
+          const isSubmitting = !!submitting[mealType];
+          const errMsg      = mealErrors[mealType];
 
-        return (
-          <div key={menu._id} className="meal-section">
-            <h4 className="meal-title" style={{ textTransform: 'capitalize' }}>
-              {mealType}
-            </h4>
-
-            {/* ── SUBMITTED STATE ── */}
-            {isDone ? (
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                padding: '0.6rem 1.2rem', borderRadius: '20px',
-                background: 'rgba(16,185,129,0.12)',
-                border: '1px solid rgba(16,185,129,0.35)',
-                color: '#10b981', fontSize: '0.9rem', fontWeight: 600,
-                marginBottom: '0.5rem'
-              }}>
-                ✅ Feedback Submitted for {mealType.charAt(0).toUpperCase() + mealType.slice(1)}
+          return (
+            <div key={menu._id} className="clay-card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ borderBottom: '1px solid var(--clay-border)', paddingBottom: '1rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h4 style={{ margin: 0, fontSize: '1.4rem', textTransform: 'capitalize', color: 'var(--text-primary)' }}>{mealType}</h4>
+                {isDone && <span className="badge badge-green"><CheckCircle2 size={14} /> Submitted</span>}
               </div>
-            ) : (
-              /* ── FEEDBACK FORM ── */
-              <div className="meal-feedback-form">
-                {menu.items.map((item, idx) => {
-                  const key             = itemKey(mealType, item.itemName);
-                  const selectedResponse = responses[key] || '';
-                  const showReplacement  =
-                    (selectedResponse === 'Partially Ate' || selectedResponse === 'Did Not Eat') &&
-                    (item.replacementOption1 || item.replacementOption2);
 
-                  return (
-                    <div key={idx} className="food-item-card">
-                      {/* Item header */}
-                      <div className="item-details">
-                        <h4>{item.itemName}</h4>
-                        {(item.replacementOption1 || item.replacementOption2) && (
-                          <p className="options-text">
-                            Options: {item.replacementOption1}
-                            {item.replacementOption2 ? ` | ${item.replacementOption2}` : ''}
-                          </p>
-                        )}
-                      </div>
+              {isDone ? (
+                <div style={{ padding: '2rem 1rem', textAlign: 'center', background: 'rgba(16,185,129,0.05)', borderRadius: 'var(--radius-md)' }}>
+                  <CheckCircle2 size={48} color="var(--success)" style={{ opacity: 0.5, marginBottom: '1rem' }} />
+                  <h4 style={{ color: 'var(--success)', margin: '0 0 0.5rem 0' }}>Thank You!</h4>
+                  <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.9rem' }}>We've recorded your feedback for {mealType}.</p>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: 1 }}>
+                  {menu.items.map((item, idx) => {
+                    const key             = itemKey(mealType, item.itemName);
+                    const selectedResponse = responses[key] || '';
+                    const showReplacement  =
+                      (selectedResponse === 'Partially Ate' || selectedResponse === 'Did Not Eat') &&
+                      (item.replacementOption1 || item.replacementOption2);
 
-                      {/* Response buttons */}
-                      <div className="feedback-section" style={{ flexDirection: 'column' }}>
-                        <p style={{
-                          fontSize: '0.8rem', color: 'var(--text-muted)',
-                          marginBottom: '0.4rem', fontWeight: 500
-                        }}>
-                          Select one: <span style={{ color: '#ef4444' }}>*</span>
-                        </p>
+                    return (
+                      <div key={idx} style={{ background: 'rgba(0,0,0,0.2)', padding: '1.25rem', borderRadius: 'var(--radius-md)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+                          <h4 style={{ margin: 0, fontSize: '1.1rem' }}>{item.itemName}</h4>
+                          {(item.replacementOption1 || item.replacementOption2) && (
+                            <span style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.6rem', borderRadius: '4px', color: 'var(--text-muted)' }}>
+                              Has options
+                            </span>
+                          )}
+                        </div>
 
-                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
                           {RESPONSE_OPTIONS.map(opt => (
                             <button
                               key={opt.value}
-                              id={`fb-${key}-${opt.value.replace(/\s+/g, '-')}`}
-                              className={`feedback-btn ${opt.className}${selectedResponse === opt.value ? ' selected' : ''}`}
-                              style={{
-                                outline: selectedResponse === opt.value
-                                  ? '2px solid #6366f1' : 'none',
-                                transform: selectedResponse === opt.value
-                                  ? 'scale(1.04)' : 'scale(1)',
-                                fontWeight: selectedResponse === opt.value ? 700 : 400,
-                                transition: 'all 0.15s ease'
-                              }}
                               onClick={() => handleResponseSelect(mealType, item.itemName, opt.value)}
+                              style={{
+                                display: 'flex', alignItems: 'center', padding: '0.75rem 1rem', borderRadius: '8px',
+                                border: '1px solid',
+                                borderColor: selectedResponse === opt.value ? opt.color : 'rgba(255,255,255,0.05)',
+                                background: selectedResponse === opt.value ? `color-mix(in srgb, ${opt.color} 15%, transparent)` : 'transparent',
+                                color: selectedResponse === opt.value ? '#fff' : 'var(--text-secondary)',
+                                fontWeight: selectedResponse === opt.value ? 600 : 400,
+                                transition: 'all 0.2s',
+                                cursor: 'pointer',
+                                width: '100%',
+                                gap: '0.5rem'
+                              }}
                             >
                               {opt.label}
                             </button>
                           ))}
                         </div>
 
-                        {/* Replacement picker — only for Partially/Not Eaten with options */}
                         {showReplacement && (
-                          <div style={{
-                            marginTop: '0.6rem', padding: '0.65rem 0.75rem',
-                            backgroundColor: 'var(--background)', borderRadius: '8px',
-                            border: '1px solid var(--border)'
-                          }}>
-                            <label style={{
-                              display: 'block', fontSize: '0.82rem',
-                              marginBottom: '0.35rem', fontWeight: 600
-                            }}>
-                              🔁 Would you like a replacement?{' '}
-                              <span style={{ fontWeight: 400, color: 'var(--text-muted)' }}>(optional)</span>
+                          <div className="form-group" style={{ marginBottom: 0 }}>
+                            <label className="form-label" style={{ color: 'var(--warning)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                              <ChevronRight size={14} /> Did you eat something else?
                             </label>
                             <select
-                              style={{
-                                width: '100%', padding: '0.45rem 0.6rem', borderRadius: '4px',
-                                border: '1px solid var(--border)',
-                                backgroundColor: 'var(--bg, #1e293b)',
-                                color: 'var(--text-main, #f1f5f9)'
-                              }}
+                              className="form-select"
                               value={replacements[key] || ''}
                               onChange={(e) => handleReplacementSelect(mealType, item.itemName, e.target.value)}
                             >
-                              <option value="">No replacement needed</option>
-                              {item.replacementOption1 && (
-                                <option value={item.replacementOption1}>{item.replacementOption1}</option>
-                              )}
-                              {item.replacementOption2 && (
-                                <option value={item.replacementOption2}>{item.replacementOption2}</option>
-                              )}
+                              <option value="">No replacement</option>
+                              {item.replacementOption1 && <option value={item.replacementOption1}>{item.replacementOption1}</option>}
+                              {item.replacementOption2 && <option value={item.replacementOption2}>{item.replacementOption2}</option>}
                             </select>
                           </div>
                         )}
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
 
-                {/* Per-meal error message */}
-                {errMsg && (
-                  <p style={{
-                    color: '#ef4444', fontSize: '0.85rem',
-                    marginTop: '0.5rem', fontWeight: 500
-                  }}>
-                    ⚠️ {errMsg}
-                  </p>
-                )}
+                  {errMsg && <div className="alert alert-error">{errMsg}</div>}
 
-                {/* Submit button — one per meal */}
-                <button
-                  id={`submit-${mealType}-feedback`}
-                  className="request-btn"
-                  style={{ marginTop: '1rem', minWidth: '160px' }}
-                  disabled={isSubmitting}
-                  onClick={() => handleSubmitMeal(menu)}
-                >
-                  {isSubmitting ? '⏳ Submitting…' : `Submit ${mealType.charAt(0).toUpperCase() + mealType.slice(1)} Feedback`}
-                </button>
-              </div>
-            )}
-          </div>
-        );
-      })}
+                  <button
+                    className="btn btn-primary btn-full"
+                    style={{ marginTop: 'auto' }}
+                    disabled={isSubmitting}
+                    onClick={() => handleSubmitMeal(menu)}
+                  >
+                    {isSubmitting ? <><span className="spinner"></span></> : 'Submit Feedback'}
+                  </button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

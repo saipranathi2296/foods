@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
+import { Camera, Send, Clock, MapPin, Search } from 'lucide-react';
 
 const LeftoverFoodForm = () => {
   const [formData, setFormData] = useState({
-    itemName: '',
-    quantity: '',
-    foodType: 'veg',
-    preparedTime: '',
-    expiryTime: '',
-    universityName: '',
-    date: '',
-    comfortablePickupTime: ''
+    itemName: '', quantity: '', foodType: 'veg', preparedTime: '', 
+    expiryTime: '', universityName: '', date: '', comfortablePickupTime: ''
   });
   const [foodImage, setFoodImage] = useState(null);
   const [message, setMessage] = useState('');
@@ -63,7 +58,6 @@ const LeftoverFoodForm = () => {
         expiryTime: '', universityName: '', date: '', comfortablePickupTime: ''
       });
       setFoodImage(null);
-      // Reset file input visually
       const fileInput = document.getElementById('foodImageInput');
       if (fileInput) fileInput.value = '';
 
@@ -84,153 +78,160 @@ const LeftoverFoodForm = () => {
 
   const getBadgeColor = (status) => {
     switch(status) {
-      case 'Posted': return { bg: 'rgba(59, 130, 246, 0.1)', color: 'var(--primary)' };
-      case 'Requested': return { bg: 'rgba(245, 158, 11, 0.1)', color: '#D97706' };
-      case 'Accepted': return { bg: 'rgba(79, 70, 229, 0.1)', color: '#4F46E5' };
-      case 'Collected': return { bg: 'rgba(16, 185, 129, 0.1)', color: '#10B981' };
-      case 'Completed': return { bg: 'rgba(5, 150, 105, 0.2)', color: '#059669' };
-      default: return { bg: 'var(--surface)', color: 'var(--text-main)' };
+      case 'Posted': return 'badge-aqua';
+      case 'Requested': return 'badge-orange';
+      case 'Accepted': return 'badge-purple';
+      case 'Collected': return 'badge-green';
+      case 'Completed': return 'badge-green';
+      default: return 'badge-aqua';
     }
   };
 
   return (
-    <div className="form-container" style={{ maxWidth: '900px' }}>
-      <div className="card">
-        <h3>Post Leftover Food</h3>
-        {message && <div style={{ color: 'var(--secondary)', marginBottom: '1rem' }}>{message}</div>}
-        {error && <div className="error-message">{error}</div>}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <div className="clay-card-inset">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+          <div style={{ background: 'var(--grad-primary)', padding: '0.5rem', borderRadius: 'var(--radius-sm)' }}>
+            <Send size={20} color="#081b22" />
+          </div>
+          <h3 style={{ margin: 0 }}>Post Leftover Food</h3>
+        </div>
+        
+        {message && <div className="alert alert-success" style={{ marginBottom: '1.5rem' }}>{message}</div>}
+        {error && <div className="alert alert-error" style={{ marginBottom: '1.5rem' }}>{error}</div>}
         
         <form onSubmit={handleSubmit}>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>University Name</label>
-              <input type="text" name="universityName" required value={formData.universityName} onChange={handleChange} placeholder="ABC College" />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">University Name</label>
+              <input type="text" name="universityName" className="form-input" required value={formData.universityName} onChange={handleChange} placeholder="ABC College" />
             </div>
-            <div className="form-group">
-              <label>Food Item Details</label>
-              <input type="text" name="itemName" required value={formData.itemName} onChange={handleChange} placeholder="e.g. Rice & Dal" />
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Food Item Details</label>
+              <input type="text" name="itemName" className="form-input" required value={formData.itemName} onChange={handleChange} placeholder="e.g. Rice & Dal" />
             </div>
-            <div className="form-group">
-              <label>Quantity (Kg/Portions)</label>
-              <input type="number" name="quantity" required value={formData.quantity} onChange={handleChange} placeholder="5" />
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Quantity (Kg/Portions)</label>
+              <input type="number" name="quantity" className="form-input" required value={formData.quantity} onChange={handleChange} placeholder="5" />
             </div>
-            <div className="form-group">
-              <label>Food Type</label>
-              <select name="foodType" value={formData.foodType} onChange={handleChange}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Food Type</label>
+              <select name="foodType" className="form-select" value={formData.foodType} onChange={handleChange}>
                 <option value="veg">Vegetarian (Veg)</option>
                 <option value="nonveg">Non-Vegetarian (Non-Veg)</option>
               </select>
             </div>
-            <div className="form-group">
-              <label>Date</label>
-              <input type="date" name="date" required value={formData.date} onChange={handleChange} />
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Date</label>
+              <input type="date" name="date" className="form-input" required value={formData.date} onChange={handleChange} />
             </div>
-            <div className="form-group">
-              <label>Comfortable Pickup Time (Deadline)</label>
-              <input type="time" name="comfortablePickupTime" required value={formData.comfortablePickupTime} onChange={handleChange} />
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Comfortable Pickup Time (Deadline)</label>
+              <input type="time" name="comfortablePickupTime" className="form-input" required value={formData.comfortablePickupTime} onChange={handleChange} />
             </div>
-            <div className="form-group">
-              <label>Prepared Time</label>
-              <input type="datetime-local" name="preparedTime" required value={formData.preparedTime} onChange={handleChange} />
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Prepared Time</label>
+              <input type="datetime-local" name="preparedTime" className="form-input" required value={formData.preparedTime} onChange={handleChange} />
             </div>
-            <div className="form-group">
-              <label>Expiry Time</label>
-              <input type="datetime-local" name="expiryTime" required value={formData.expiryTime} onChange={handleChange} />
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Expiry Time</label>
+              <input type="datetime-local" name="expiryTime" className="form-input" required value={formData.expiryTime} onChange={handleChange} />
             </div>
-            <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-              <label>📸 Image of Food</label>
-              <input type="file" id="foodImageInput" accept="image/*" required onChange={handleImageChange} />
+            <div className="form-group" style={{ gridColumn: '1 / -1', marginTop: '0.5rem' }}>
+              <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Camera size={16} /> Photo Proof of Food
+              </label>
+              <input type="file" id="foodImageInput" accept="image/*" required onChange={handleImageChange} style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: 'var(--radius-sm)', width: '100%' }} />
             </div>
           </div>
 
-          <button type="submit" className="submit-btn" style={{ marginTop: '1.5rem' }}>Post Food</button>
+          <button type="submit" className="btn btn-primary btn-full" style={{ marginTop: '2rem' }}>
+            Post Food Availability
+          </button>
         </form>
       </div>
 
-      <div className="menu-list">
-        <h3>Your Leftover Posts Track Record</h3>
-        {leftovers.map(l => {
-          const badge = getBadgeColor(l.pickupStatus);
-          return (
-            <div key={l._id} className="card menu-list-card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              
-              {/* Header Info */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div style={{ display: 'flex', gap: '1rem' }}>
+      <div className="clay-card-inset">
+        <h3 style={{ marginBottom: '1.5rem', fontSize: '1.25rem' }}>Leftover Tracking History</h3>
+        {leftovers.length === 0 ? (
+          <p style={{ color: 'var(--text-muted)' }}>No leftover logs yet.</p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            {leftovers.map(l => (
+              <div key={l._id} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 'var(--radius-md)', padding: '1.5rem', border: '1px solid var(--clay-border-2)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', md: { flexDirection: 'row' }, gap: '1.5rem' }}>
+                  
                   {l.foodImage && (
                     <img 
                       src={`http://localhost:5000${l.foodImage}`} 
                       alt="Food" 
-                      style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }} 
+                      style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: 'var(--radius-sm)', background: 'rgba(0,0,0,0.5)' }} 
                     />
                   )}
-                  <div>
-                    <h4 style={{ margin: '0 0 0.25rem 0' }}>{l.itemName}</h4>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                      {l.quantity} units • <span style={{ textTransform: 'capitalize', color: l.foodType==='veg' ? 'var(--secondary)' : 'var(--danger)' }}>{l.foodType}</span>
-                    </div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
-                      University: {l.universityName} <br/>
-                      Deadline: {l.comfortablePickupTime}
-                    </div>
-                  </div>
-                </div>
-                <div style={{ padding: '0.25rem 0.75rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 600, backgroundColor: badge.bg, color: badge.color }}>
-                  {l.pickupStatus.toUpperCase()}
-                </div>
-              </div>
-
-              {/* Request Details & Actions */}
-              {l.requestDetails && (
-                <div style={{ background: 'var(--background)', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                  <h5 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-main)' }}>NGO Request Details</h5>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                    <div><strong>NGO:</strong> {l.requestDetails.ngoName}</div>
-                    <div><strong>Collector:</strong> {l.requestDetails.personName}</div>
-                    <div><strong>Phone:</strong> {l.requestDetails.phoneNumber}</div>
-                    <div><strong>Pickup Time:</strong> {l.requestDetails.pickupTime}</div>
-                  </div>
                   
-                  {l.pickupStatus === 'Requested' && (
-                    <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
-                      <button 
-                        onClick={() => handleAction(l._id, 'accept')}
-                        style={{ padding: '0.4rem 0.75rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}
-                      >
-                        Accept Request
-                      </button>
-                      <button 
-                        onClick={() => handleAction(l._id, 'reject')}
-                        style={{ padding: '0.4rem 0.75rem', background: 'var(--danger)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}
-                      >
-                        Reject
-                      </button>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                      <h4 style={{ fontSize: '1.2rem', margin: 0, color: 'var(--text-primary)' }}>{l.itemName}</h4>
+                      <span className={`badge ${getBadgeColor(l.pickupStatus)}`}>{l.pickupStatus}</span>
                     </div>
-                  )}
+                    
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
+                      <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}><b>Qty:</b> {l.quantity} units</span>
+                      <span style={{ fontSize: '0.9rem', color: l.foodType==='veg' ? 'var(--success)' : 'var(--danger)', textTransform: 'capitalize' }}>
+                        <b>Type:</b> {l.foodType}
+                      </span>
+                    </div>
+                    
+                    <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <MapPin size={14} /> {l.universityName}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Clock size={14} /> Deadline: {l.comfortablePickupTime}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              )}
 
-              {/* Proof Images Gallery */}
-              {(l.collectionImage || l.deliveryImage) && (
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
-                  {l.collectionImage && (
-                    <div>
-                      <div style={{ fontSize: '0.75rem', fontWeight: 600, marginBottom: '0.25rem', color: 'var(--text-muted)' }}>📸 Collection Proof</div>
-                      <img src={`http://localhost:5000${l.collectionImage}`} alt="Collected" style={{ width: '120px', height: '90px', objectFit: 'cover', borderRadius: '8px', border: '1px solid var(--border)' }} />
+                {l.requestDetails && (
+                  <div style={{ marginTop: '1.5rem', background: 'rgba(6, 182, 212, 0.05)', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(6, 182, 212, 0.2)' }}>
+                    <h5 style={{ margin: '0 0 0.75rem 0', color: 'var(--accent)' }}>NGO Request Details</h5>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                      <div><b>NGO:</b> {l.requestDetails.ngoName}</div>
+                      <div><b>Collector:</b> {l.requestDetails.personName}</div>
+                      <div><b>Phone:</b> {l.requestDetails.phoneNumber}</div>
+                      <div><b>Pickup Time:</b> {l.requestDetails.pickupTime}</div>
                     </div>
-                  )}
-                  {l.deliveryImage && (
-                    <div>
-                      <div style={{ fontSize: '0.75rem', fontWeight: 600, marginBottom: '0.25rem', color: 'var(--text-muted)' }}>📸 Delivery Proof</div>
-                      <img src={`http://localhost:5000${l.deliveryImage}`} alt="Delivered" style={{ width: '120px', height: '90px', objectFit: 'cover', borderRadius: '8px', border: '1px solid var(--border)' }} />
-                    </div>
-                  )}
-                </div>
-              )}
+                    
+                    {l.pickupStatus === 'Requested' && (
+                      <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                        <button onClick={() => handleAction(l._id, 'accept')} className="btn btn-primary btn-sm">Accept Request</button>
+                        <button onClick={() => handleAction(l._id, 'reject')} className="btn btn-danger btn-sm">Reject</button>
+                      </div>
+                    )}
+                  </div>
+                )}
 
-            </div>
-          );
-        })}
+                {(l.collectionImage || l.deliveryImage) && (
+                  <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid var(--clay-border)' }}>
+                    {l.collectionImage && (
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--text-muted)' }}>📸 Collection Proof</div>
+                        <img src={`http://localhost:5000${l.collectionImage}`} alt="Collected" style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: 'var(--radius-sm)' }} />
+                      </div>
+                    )}
+                    {l.deliveryImage && (
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--text-muted)' }}>📸 Delivery Proof</div>
+                        <img src={`http://localhost:5000${l.deliveryImage}`} alt="Delivered" style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: 'var(--radius-sm)' }} />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

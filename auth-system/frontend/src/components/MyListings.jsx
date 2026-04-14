@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import '../styles/SwapMarketplace.css';
+import { List, ArrowRightLeft, Heart, CheckCircle2, XCircle, MapPin, Clock, ArrowRight } from 'lucide-react';
 
 const MyListings = () => {
   const [listings, setListings] = useState([]);
@@ -16,7 +16,6 @@ const MyListings = () => {
       const itemsRes = await api.get('/items/my-listings');
       const items = itemsRes.data;
 
-      // Try to load incoming requests separately — don't let it block item display
       let incomingRequests = [];
       try {
         const requestsRes = await api.get('/requests/incoming');
@@ -43,10 +42,10 @@ const MyListings = () => {
   const handleApprove = async (item, reqId) => {
     try {
       const meetingBlock = prompt("Setup Meeting - Enter meeting location/block details:");
-      if (!meetingBlock) return; // Cancelled prompt
+      if (!meetingBlock) return;
       
       const meetingTime = prompt("Setup Meeting - Enter meeting time:");
-      if (!meetingTime) return; // Cancelled prompt
+      if (!meetingTime) return;
       
       let payload = { meetingBlock, meetingTime };
       
@@ -73,139 +72,126 @@ const MyListings = () => {
     }
   };
 
-  if (loading) return <div>Loading your listings...</div>;
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '4rem', color: 'var(--text-muted)' }}>
+        <div className="spinner" style={{ marginBottom: '1rem' }}></div>
+        <div>Loading your listings...</div>
+      </div>
+    );
+  }
 
   if (listings.length === 0) {
     return (
-      <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
-        <p style={{ color: 'var(--text-muted)' }}>You haven't posted any items yet.</p>
+      <div className="clay-card-inset" style={{ textAlign: 'center', padding: '4rem' }}>
+        <List size={48} color="var(--clay-border-2)" style={{ marginBottom: '1rem' }} />
+        <h3 style={{ color: 'var(--text-secondary)' }}>No Listings Found</h3>
+        <p style={{ color: 'var(--text-muted)', margin: 0 }}>You haven't posted any items yet. Help the community by sharing!</p>
       </div>
     );
   }
 
   return (
-    <div className="listings-container">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       {listings.map(item => (
-        <div key={item._id} className="listing-card">
-          <div className="listing-header">
+        <div key={item._id} className="clay-card" style={{ padding: '2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid var(--clay-border)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
             <div>
-              <h3 style={{ margin: '0 0 0.5rem 0' }}>{item.itemName}</h3>
-              <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-                Type: {item.exchangeType} | Status: <strong style={{textTransform: 'uppercase'}}>{item.status}</strong>
-              </p>
+              <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.4rem' }}>{item.itemName}</h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <span className={`badge ${item.exchangeType === 'swap' ? 'badge-aqua' : 'badge-orange'}`}>
+                  {item.exchangeType === 'swap' ? <><ArrowRightLeft size={12} /> Swap</> : <><Heart size={12} /> Donate</>}
+                </span>
+                <span className={`badge ${item.status === 'active' ? 'badge-green' : item.status === 'locked' ? 'badge-orange' : 'badge-red'}`}>
+                  {item.status.toUpperCase()}
+                </span>
+              </div>
             </div>
-            <span className={`exchange-badge badge-${item.exchangeType}`} style={{position: 'static'}}>
-              {item.exchangeType}
-            </span>
+            
+            {item.image && (
+              <img 
+                src={`http://localhost:5000${item.image}`} 
+                alt="Item" 
+                style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '12px' }}
+              />
+            )}
           </div>
 
-          <div className="requests-section">
-            <h4>Requests ({item.requests ? item.requests.length : 0})</h4>
+          <div>
+            <h4 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: 'var(--text-secondary)' }}>
+              Incoming Requests ({item.requests ? item.requests.length : 0})
+            </h4>
             
             {item.requests && item.requests.length === 0 ? (
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>No requests yet.</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontStyle: 'italic' }}>No requests yet.</p>
             ) : (
-              item.requests && item.requests.map(req => (
-                <div key={req._id} className="request-card">
-                  <div className="requester-info">
-                    {req.swapImage && (
-                      <img 
-                        src={`http://localhost:5000${req.swapImage}`} 
-                        alt="Offered Swap" 
-                        className="swap-image-preview"
-                        onError={(e) => { e.target.src = 'https://via.placeholder.com/80' }}
-                      />
-                    )}
-                    <div className="requester-details" style={{ flex: 1 }}>
-                      <h5 style={{ color: 'var(--primary)', marginBottom: '0.25rem' }}>Request From: {req.requesterId?.name || 'Unknown User'} (To: You)</h5>
-                      <p style={{ margin: 0, fontSize: '0.875rem' }}>{req.requesterId?.email || 'No email provided'}</p>
-                      
-                      {req.offeredItemDetails && (
-                        <div style={{ marginTop: '0.75rem', padding: '0.5rem', backgroundColor: 'var(--bg-dark)', borderRadius: '4px' }}>
-                          <p style={{ fontSize: '0.875rem', margin: 0, color: 'var(--text)' }}>
-                            <strong>Offering:</strong> {req.offeredItemDetails}
-                          </p>
-                        </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {item.requests && item.requests.map(req => (
+                  <div key={req._id} className="clay-card-inset" style={{ padding: '1.25rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ display: 'flex', gap: '1.25rem' }}>
+                      {req.swapImage && (
+                        <img 
+                          src={`http://localhost:5000${req.swapImage}`} 
+                          alt="Offered Swap" 
+                          style={{ width: '90px', height: '90px', objectFit: 'cover', borderRadius: 'var(--radius-sm)' }}
+                        />
                       )}
-                      
-                      {req.pickupTime && (
-                        <div style={{ marginTop: '0.75rem', padding: '0.5rem', backgroundColor: 'var(--bg-dark)', borderRadius: '4px' }}>
-                          <p style={{ fontSize: '0.875rem', margin: 0, color: 'var(--text)' }}>
-                            <strong>Pickup Request:</strong> {req.pickupBlock} at {req.pickupTime}
-                          </p>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.25rem' }}>
+                          <h5 style={{ color: 'var(--accent)', margin: 0, fontSize: '1.05rem' }}>{req.requesterId?.name || 'Unknown User'}</h5>
+                          <span style={{ 
+                            fontSize: '0.75rem', fontWeight: 600, padding: '0.2rem 0.6rem', borderRadius: '100px',
+                            background: req.status === 'accepted' ? 'rgba(16,185,129,0.15)' : req.status === 'rejected' || req.status === 'cancelled' ? 'rgba(248,113,113,0.15)' : 'rgba(255,255,255,0.1)',
+                            color: req.status === 'accepted' ? 'var(--success)' : req.status === 'rejected' || req.status === 'cancelled' ? 'var(--danger)' : 'var(--text-muted)'
+                          }}>
+                            {req.status === 'rejected' ? 'REJECTED' : req.status === 'cancelled' ? 'CANCELLED' : req.status === 'accepted' ? 'ACCEPTED' : 'PENDING'}
+                          </span>
                         </div>
-                      )}
+                        <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>{req.requesterId?.email || 'No email'}</p>
+                        
+                        {req.offeredItemDetails && (
+                          <div style={{ marginBottom: '0.75rem', padding: '0.75rem', background: 'rgba(0,0,0,0.3)', borderRadius: '6px' }}>
+                            <p style={{ fontSize: '0.85rem', margin: 0, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                              <ArrowRight size={14} color="var(--accent)" />
+                              <strong>Offering:</strong> {req.offeredItemDetails}
+                            </p>
+                          </div>
+                        )}
 
-                      {req.status === 'accepted' && (req.meetingBlock || req.pickupBlock) && (
-                        <div style={{ marginTop: '0.75rem', padding: '0.75rem', backgroundColor: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '4px' }}>
-                          <p style={{ margin: '0 0 0.25rem 0', fontWeight: 600, color: '#10b981' }}>✅ Confirmed Meeting Details:</p>
-                          <p style={{ margin: 0, fontSize: '0.875rem' }}>📍 {req.meetingBlock || req.pickupBlock} | ⏰ {req.meetingTime || req.pickupTime}</p>
-                          {item.exchangeType === 'swap' && req.genderPreference && (
-                            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.875rem' }}>🚻 {req.genderPreference} preferred</p>
-                          )}
-                        </div>
-                      )}
+                        {req.status === 'accepted' && (req.meetingBlock || req.pickupBlock) && (
+                          <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: '8px' }}>
+                            <p style={{ margin: '0 0 0.5rem 0', fontWeight: 700, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={16} /> Meeting Confirmed</p>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'min-content 1fr', gap: '0.5rem 1rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                              <MapPin size={14} /><span style={{ whiteSpace: 'nowrap' }}>{req.meetingBlock || req.pickupBlock}</span>
+                              <Clock size={14} /><span style={{ whiteSpace: 'nowrap' }}>{req.meetingTime || req.pickupTime}</span>
+                              {item.exchangeType === 'swap' && req.genderPreference && (
+                                <><p style={{ margin: 0}}>🚻</p><span>{req.genderPreference} preferred</span></>
+                              )}
+                            </div>
+                          </div>
+                        )}
 
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.75rem', alignItems: 'center' }}>
-                        <p style={{ fontSize: '0.75rem', margin: 0 }}>
-                          Qty: {req.quantityRequested} | Date: {new Date(req.createdAt).toLocaleDateString()}
-                        </p>
-                        <p style={{ 
-                          fontSize: '0.75rem', margin: 0, fontWeight: 600, textTransform: 'uppercase',
-                          color: req.status === 'accepted' ? '#10b981' : req.status === 'rejected' || req.status === 'cancelled' ? '#ef4444' : 'var(--text-muted)'
-                        }}>
-                          {req.status === 'rejected' ? '❌ Rejected' : req.status === 'cancelled' ? '🚫 Cancelled' : req.status === 'accepted' ? '✅ Accepted' : `⏳ ${req.status}`}
-                        </p>
+                        {(item.status === 'active' || item.status === 'locked') && req.status === 'pending' && (
+                          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.25rem' }}>
+                            <button 
+                              className="btn btn-primary btn-sm" 
+                              onClick={() => handleApprove(item, req._id)}
+                            >
+                              <CheckCircle2 size={16} /> Accept Offer
+                            </button>
+                            <button 
+                              className="btn btn-secondary btn-sm" 
+                              onClick={() => handleReject(req._id)}
+                            >
+                              <XCircle size={16} /> Reject
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
-                  
-                  {(item.status === 'active' || item.status === 'locked' || item.status === 'unavailable') && req.status === 'accepted' && (
-                    <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: 'rgba(16, 185, 129, 0.08)', border: '2px solid rgba(16, 185, 129, 0.3)', borderRadius: '8px' }}>
-                      <p style={{ margin: '0 0 0.75rem 0', fontWeight: 700, color: '#10b981', fontSize: '1rem' }}>✅ Request Accepted — Full Summary</p>
-                      
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                        <div style={{ padding: '0.75rem', background: 'var(--bg-dark)', borderRadius: '6px' }}>
-                          <p style={{ margin: '0 0 0.25rem 0', fontWeight: 600, fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Your Item</p>
-                          <p style={{ margin: 0, fontWeight: 500 }}>{item.itemName}</p>
-                          <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>Type: {item.exchangeType} | Qty: {req.quantityRequested}</p>
-                          {item.returnItemDetails && <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8rem', color: 'var(--primary)' }}>Wanted: {item.returnItemDetails}</p>}
-                        </div>
-                        <div style={{ padding: '0.75rem', background: 'var(--bg-dark)', borderRadius: '6px' }}>
-                          <p style={{ margin: '0 0 0.25rem 0', fontWeight: 600, fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Requester</p>
-                          <p style={{ margin: 0, fontWeight: 500 }}>{req.requesterId?.name || 'Unknown'}</p>
-                          <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>{req.requesterId?.email}</p>
-                          {req.offeredItemDetails && <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8rem', color: 'var(--primary)' }}>Offering: {req.offeredItemDetails}</p>}
-                        </div>
-                      </div>
-
-                      <div style={{ padding: '0.75rem', background: 'var(--bg-dark)', borderRadius: '6px' }}>
-                        <p style={{ margin: '0 0 0.25rem 0', fontWeight: 600, fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Meeting Details (set by you)</p>
-                        <p style={{ margin: 0 }}>📍 {req.meetingBlock} &nbsp; ⏰ {req.meetingTime}</p>
-                        {req.genderPreference && <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8rem' }}>🚻 {req.genderPreference} preferred</p>}
-                      </div>
-                    </div>
-                  )}
-                  {(item.status === 'active' || item.status === 'locked') && req.status === 'pending' && (
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <button 
-                        className="submit-btn" 
-                        style={{ padding: '0.5rem 1.5rem', backgroundColor: 'var(--primary)' }}
-                        onClick={() => handleApprove(item, req._id)}
-                      >
-                        Accept
-                      </button>
-                      <button 
-                        className="submit-btn" 
-                        style={{ padding: '0.5rem 1.5rem', backgroundColor: 'var(--secondary)', color: 'white' }}
-                        onClick={() => handleReject(req._id)}
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ))
+                ))}
+              </div>
             )}
           </div>
         </div>

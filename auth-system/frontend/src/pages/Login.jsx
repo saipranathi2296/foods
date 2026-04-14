@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { GoogleLogin } from '@react-oauth/google';
-import '../styles/Login.css';
+import { Mail, Lock, LogIn, ArrowRight, Phone, Home, UserCircle } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -61,73 +61,94 @@ const Login = () => {
   if (loading) return null;
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Login to Access Dashboard</h2>
-        <p className="auth-subtitle">Sign in with your registered email</p>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', padding: '2rem' }}>
+      <div className="clay-card" style={{ width: '100%', maxWidth: '440px', padding: '2.5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <div style={{ 
+            display: 'inline-flex', padding: '1rem', borderRadius: '50%', 
+            background: 'var(--grad-primary)', marginBottom: '1rem',
+            boxShadow: '0 4px 10px rgba(6, 182, 212, 0.4)'
+          }}>
+            <LogIn size={32} color="#081b22" />
+          </div>
+          <h2 style={{ marginBottom: '0.5rem' }}>Welcome Back</h2>
+          <p>Sign in to your account</p>
+        </div>
         
         {error && (
-          <div className="error-message">
-            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            {error}
+          <div className="alert alert-error" style={{ marginBottom: '1.5rem' }}>
+            <span>{error}</span>
           </div>
         )}
 
         {pendingGoogleToken ? (
           <form onSubmit={handleCompleteRegistration}>
             <div className="form-group">
-              <label htmlFor="role">Role / Panel</label>
-              <select id="role" name="role" value={extraDetails.role} onChange={handleExtraDetailsChange}>
-                <option value="student">Student</option>
-                <option value="mess">Mess Staff</option>
-                <option value="ngo">NGO</option>
-              </select>
+              <label className="form-label" htmlFor="role">Role / Panel</label>
+              <div style={{ position: 'relative' }}>
+                <UserCircle size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                <select id="role" name="role" className="form-select" style={{ paddingLeft: '2.75rem' }} value={extraDetails.role} onChange={handleExtraDetailsChange}>
+                  <option value="student">Student</option>
+                  <option value="mess">Mess Staff</option>
+                  <option value="ngo">NGO</option>
+                </select>
+              </div>
             </div>
             
             <div className="form-group">
-              <label htmlFor="phoneNumber">Phone Number</label>
-              <input
-                type="tel"
-                id="phoneNumber"
-                name="phoneNumber"
-                value={extraDetails.phoneNumber}
-                onChange={handleExtraDetailsChange}
-                placeholder="Your Phone Number"
-                required
-              />
+              <label className="form-label" htmlFor="phoneNumber">Phone Number</label>
+              <div style={{ position: 'relative' }}>
+                <Phone size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                <input
+                  type="tel"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  className="form-input"
+                  style={{ paddingLeft: '2.75rem' }}
+                  value={extraDetails.phoneNumber}
+                  onChange={handleExtraDetailsChange}
+                  placeholder="+1 234 567 890"
+                  required
+                />
+              </div>
             </div>
 
             {extraDetails.role === 'student' && (
-              <div className="row">
-                <div className="col form-group">
-                  <label htmlFor="gender">Gender</label>
-                  <select id="gender" name="gender" value={extraDetails.gender} onChange={handleExtraDetailsChange}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="gender">Gender</label>
+                  <select id="gender" name="gender" className="form-select" value={extraDetails.gender} onChange={handleExtraDetailsChange}>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                     <option value="other">Other</option>
                   </select>
                 </div>
-                <div className="col form-group">
-                  <label htmlFor="hostelBlock">Hostel Block</label>
-                  <input
-                    type="text"
-                    id="hostelBlock"
-                    name="hostelBlock"
-                    value={extraDetails.hostelBlock}
-                    onChange={handleExtraDetailsChange}
-                    placeholder="e.g., Block A"
-                  />
+                <div className="form-group">
+                  <label className="form-label" htmlFor="hostelBlock">Hostel Block</label>
+                  <div style={{ position: 'relative' }}>
+                    <Home size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                    <input
+                      type="text"
+                      id="hostelBlock"
+                      name="hostelBlock"
+                      className="form-input"
+                      style={{ paddingLeft: '2.75rem' }}
+                      value={extraDetails.hostelBlock}
+                      onChange={handleExtraDetailsChange}
+                      placeholder="e.g., Block A"
+                    />
+                  </div>
                 </div>
               </div>
             )}
 
-            <button type="submit" className="auth-button" disabled={isSubmitting}>
-              {isSubmitting ? 'Completing...' : 'Complete Registration'}
+            <button type="submit" className="btn btn-primary btn-full" disabled={isSubmitting} style={{ marginTop: '1rem' }}>
+              {isSubmitting ? <><span className="spinner"></span> Completing...</> : 'Complete Registration'}
             </button>
             <button 
               type="button" 
-              className="auth-button" 
-              style={{marginTop: '0.5rem', background: '#ccc', color: '#333'}} 
+              className="btn btn-ghost btn-full" 
+              style={{marginTop: '0.5rem'}} 
               onClick={() => setPendingGoogleToken(null)}
             >
               Cancel
@@ -137,61 +158,74 @@ const Login = () => {
           <>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="email">Email Address</label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  required
-                />
+                <label className="form-label" htmlFor="email">Email Address</label>
+                <div style={{ position: 'relative' }}>
+                  <Mail size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                  <input
+                    type="email"
+                    id="email"
+                    className="form-input"
+                    style={{ paddingLeft: '2.75rem' }}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    required
+                  />
+                </div>
               </div>
 
               <div className="form-group">
-                <label htmlFor="password">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                />
+                <label className="form-label" htmlFor="password">Password</label>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                  <input
+                    type="password"
+                    id="password"
+                    className="form-input"
+                    style={{ paddingLeft: '2.75rem' }}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                  />
+                </div>
               </div>
 
-              <button type="submit" className="auth-button" disabled={isSubmitting}>
-                {isSubmitting ? 'Signing in...' : 'Sign In'}
+              <button type="submit" className="btn btn-primary btn-full" disabled={isSubmitting} style={{ marginTop: '0.5rem' }}>
+                {isSubmitting ? <span className="spinner"></span> : 'Sign In'}
               </button>
             </form>
           </>
         )}
 
         {!pendingGoogleToken && (
-          <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center' }}>
-            <GoogleLogin
-              onSuccess={async (credentialResponse) => {
-                try {
-                  await googleLogin(credentialResponse.credential);
-                } catch (err) {
-                  if (err.response?.data?.requirePhone) {
-                    setPendingGoogleToken(credentialResponse.credential);
-                    setError(''); // clear any possible error, they just need to complete registration
-                  } else {
-                    setError(err.response?.data?.message || 'Google Login failed.');
+          <div style={{ marginTop: '2rem' }}>
+            <div className="divider">Or continue with</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  try {
+                    await googleLogin(credentialResponse.credential);
+                  } catch (err) {
+                    if (err.response?.data?.requirePhone) {
+                      setPendingGoogleToken(credentialResponse.credential);
+                      setError('');
+                    } else {
+                      setError(err.response?.data?.message || 'Google Login failed.');
+                    }
                   }
-                }
-              }}
-              onError={() => {
-                setError('Google Login Failed');
-              }}
-            />
+                }}
+                onError={() => {
+                  setError('Google Login Failed');
+                }}
+              />
+            </div>
           </div>
         )}
 
         {!pendingGoogleToken && (
-          <div className="auth-footer">
-            Don't have an account? <Link to="/signup">Sign up</Link>
+          <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+            Don't have an account? <Link to="/signup" style={{ fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>Sign up <ArrowRight size={14} /></Link>
           </div>
         )}
       </div>

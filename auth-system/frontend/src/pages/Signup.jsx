@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { GoogleLogin } from '@react-oauth/google';
-import '../styles/Signup.css';
+import { UserPlus, User, Mail, Lock, ArrowRight } from 'lucide-react';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -52,21 +52,30 @@ const Signup = () => {
   if (loading) return null;
 
   return (
-    <div className="auth-container">
-      <div className="auth-card signup-card">
-        <h2>Create an Account</h2>
-        <p className="auth-subtitle">Join us to get started</p>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', padding: '2rem' }}>
+      <div className="clay-card" style={{ width: '100%', maxWidth: '460px', padding: '2.5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <div style={{ 
+            display: 'inline-flex', padding: '1rem', borderRadius: '50%', 
+            background: 'var(--grad-green)', marginBottom: '1rem',
+            boxShadow: '0 4px 10px rgba(16, 185, 129, 0.4)'
+          }}>
+            <UserPlus size={32} color="#081b22" />
+          </div>
+          <h2 style={{ marginBottom: '0.5rem' }}>Create Account</h2>
+          <p>Join the FoodShare community</p>
+        </div>
         
         {error && (
-          <div className="error-message">
-            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            {error}
+          <div className="alert alert-error" style={{ marginBottom: '1.5rem' }}>
+            <span>{error}</span>
           </div>
         )}
 
-        <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <h4>Option 1: Sign up with Google</h4>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.5rem' }}>
           <GoogleLogin
+            shape="pill"
+            theme="filled_black"
             onSuccess={async (credentialResponse) => {
               try {
                 await googleValidate(credentialResponse.credential);
@@ -86,56 +95,70 @@ const Signup = () => {
           />
         </div>
 
-        <hr style={{ margin: '2rem 0' }} />
-        <h4>Option 2: Signup Manually</h4>
+        <div className="divider">Or register manually</div>
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="name">Full Name</label>
-            <input 
-              type="text" 
-              id="name" 
-              name="name"
-              value={formData.name} 
-              onChange={handleChange} 
-              placeholder="John Doe" 
-              required 
-            />
+            <label className="form-label" htmlFor="name">Full Name</label>
+            <div style={{ position: 'relative' }}>
+              <User size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <input 
+                type="text" 
+                id="name" 
+                name="name"
+                className="form-input"
+                style={{ paddingLeft: '2.75rem' }}
+                value={formData.name} 
+                onChange={handleChange} 
+                placeholder="John Doe" 
+                required 
+              />
+            </div>
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email Address</label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email"
-              value={formData.email} 
-              onChange={handleChange} 
-              placeholder="you@example.com" 
-              required 
-            />
+            <label className="form-label" htmlFor="email">Email Address</label>
+            <div style={{ position: 'relative' }}>
+              <Mail size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <input 
+                type="email" 
+                id="email" 
+                name="email"
+                className="form-input"
+                style={{ paddingLeft: '2.75rem' }}
+                value={formData.email} 
+                onChange={handleChange} 
+                placeholder="you@example.com" 
+                required 
+              />
+            </div>
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input 
-              type="password" 
-              id="password" 
-              name="password"
-              value={formData.password} 
-              onChange={handleChange} 
-              placeholder="••••••••" 
-              required 
-            />
+            <label className="form-label" htmlFor="password">Password</label>
+            <div style={{ position: 'relative' }}>
+              <Lock size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <input 
+                type="password" 
+                id="password" 
+                name="password"
+                className="form-input"
+                style={{ paddingLeft: '2.75rem' }}
+                value={formData.password} 
+                onChange={handleChange} 
+                placeholder="••••••••" 
+                required 
+              />
+            </div>
           </div>
 
-          <button type="submit" className="auth-button" disabled={isSubmitting}>
-            {isSubmitting ? 'Validating...' : 'Next'}
+          <button type="submit" className="btn btn-primary btn-full" disabled={isSubmitting} style={{ marginTop: '0.5rem' }}>
+            {isSubmitting ? <span className="spinner"></span> : <>Next Step <ArrowRight size={18} /></>}
           </button>
         </form>
 
-        <div className="auth-footer" style={{ marginTop: '1rem' }}>
-          Already have an account? <Link to="/login">Sign in</Link>
+        <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+          Already have an account? <Link to="/login" style={{ fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>Sign in <ArrowRight size={14} /></Link>
         </div>
       </div>
     </div>

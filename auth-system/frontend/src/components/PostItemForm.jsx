@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import api from '../services/api';
-import '../styles/MenuForm.css'; // Reusing form grid styles
-import '../styles/SwapMarketplace.css'; // For upload area
+import { Camera, Send, ShoppingBag, Type, Tag, Users, HelpCircle, Package, ArrowRightLeft } from 'lucide-react';
 
 const PostItemForm = ({ onPostSuccess }) => {
   const [formData, setFormData] = useState({
@@ -29,7 +28,6 @@ const PostItemForm = ({ onPostSuccess }) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
-      // Create preview URL
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
@@ -57,13 +55,10 @@ const PostItemForm = ({ onPostSuccess }) => {
 
     try {
       await api.post('/items', data, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
       setMessage('Item posted successfully!');
       
-      // Reset form
       setFormData({
         itemName: '', description: '', returnItemDetails: '', category: 'Notebooks', condition: '', quantity: 1,
         exchangeType: 'swap', hostelBlock: '', genderVisibility: 'all'
@@ -80,34 +75,51 @@ const PostItemForm = ({ onPostSuccess }) => {
   };
 
   return (
-    <div className="form-container">
-      <div className="card">
-        <h3>Post an Item for Swap or Donate</h3>
-        {message && <div style={{ color: 'var(--secondary)', marginBottom: '1rem' }}>{message}</div>}
-        {error && <div className="error-message">{error}</div>}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <div className="clay-card-inset">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+          <div style={{ background: 'var(--grad-primary)', padding: '0.5rem', borderRadius: 'var(--radius-sm)' }}>
+            <ShoppingBag size={20} color="#081b22" />
+          </div>
+          <h3 style={{ margin: 0 }}>Post an Item for Swap or Donate</h3>
+        </div>
+        
+        {message && <div className="alert alert-success" style={{ marginBottom: '1.5rem' }}>{message}</div>}
+        {error && <div className="alert alert-error" style={{ marginBottom: '1.5rem' }}>{error}</div>}
         
         <form onSubmit={handleSubmit}>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Item Name</label>
-              <input type="text" name="itemName" required value={formData.itemName} onChange={handleChange} placeholder="e.g. Engineering Mathematics Textbook" />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+            
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Type size={14} /> Item Name</label>
+              <input type="text" name="itemName" className="form-input" required value={formData.itemName} onChange={handleChange} placeholder="e.g. Engineering Math Book" />
             </div>
 
-            <div className="form-group">
-              <label>Description</label>
-              <input type="text" name="description" required value={formData.description} onChange={handleChange} placeholder="Explain details about the item..." />
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><HelpCircle size={14} /> Description</label>
+              <input type="text" name="description" className="form-input" required value={formData.description} onChange={handleChange} placeholder="Explain details about the item..." />
+            </div>
+
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><ArrowRightLeft size={14} /> Exchange Type</label>
+              <select name="exchangeType" className="form-select" value={formData.exchangeType} onChange={handleChange}>
+                <option value="swap">Swap</option>
+                <option value="donate">Donate</option>
+              </select>
             </div>
 
             {formData.exchangeType === 'swap' && (
-              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label>What I want in return (Mandatory)</label>
-                <input type="text" name="returnItemDetails" required value={formData.returnItemDetails} onChange={handleChange} placeholder="e.g. Calculator, physics book, or 50 rupees..." />
+              <div className="form-group" style={{ marginBottom: 0, gridColumn: '1 / -1' }}>
+                <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--accent)' }}>
+                  <ArrowRightLeft size={14} /> What I want in return (Mandatory)
+                </label>
+                <input type="text" name="returnItemDetails" className="form-input" style={{ borderColor: 'rgba(6, 182, 212, 0.4)' }} required value={formData.returnItemDetails} onChange={handleChange} placeholder="e.g. Calculator, physics book..." />
               </div>
             )}
             
-            <div className="form-group">
-              <label>Category</label>
-              <select name="category" value={formData.category} onChange={handleChange}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Category</label>
+              <select name="category" className="form-select" value={formData.category} onChange={handleChange}>
                 <option value="Notebooks">Notebooks</option>
                 <option value="Books">Books</option>
                 <option value="Dresses">Dresses</option>
@@ -116,32 +128,24 @@ const PostItemForm = ({ onPostSuccess }) => {
               </select>
             </div>
 
-            <div className="form-group">
-              <label>Condition</label>
-              <input type="text" name="condition" required value={formData.condition} onChange={handleChange} placeholder="e.g. Good, Like New" />
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Tag size={14} /> Condition</label>
+              <input type="text" name="condition" className="form-input" required value={formData.condition} onChange={handleChange} placeholder="e.g. Good, Like New" />
             </div>
 
-            <div className="form-group">
-              <label>Quantity</label>
-              <input type="number" name="quantity" required min="1" value={formData.quantity} onChange={handleChange} />
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Package size={14} /> Quantity</label>
+              <input type="number" name="quantity" className="form-input" required min="1" value={formData.quantity} onChange={handleChange} />
             </div>
 
-            <div className="form-group">
-              <label>Exchange Type</label>
-              <select name="exchangeType" value={formData.exchangeType} onChange={handleChange}>
-                <option value="swap">Swap</option>
-                <option value="donate">Donate</option>
-              </select>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Hostel Block</label>
+              <input type="text" name="hostelBlock" className="form-input" required value={formData.hostelBlock} onChange={handleChange} placeholder="e.g. Block A" />
             </div>
 
-            <div className="form-group">
-              <label>Hostel Block</label>
-              <input type="text" name="hostelBlock" required value={formData.hostelBlock} onChange={handleChange} placeholder="e.g. Block A" />
-            </div>
-
-            <div className="form-group">
-              <label>Visibility</label>
-              <select name="genderVisibility" value={formData.genderVisibility} onChange={handleChange}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Users size={14} /> Visibility</label>
+              <select name="genderVisibility" className="form-select" value={formData.genderVisibility} onChange={handleChange}>
                 <option value="all">Visible to Everyone</option>
                 <option value="male">Visible to Boys Hostel Only</option>
                 <option value="female">Visible to Girls Hostel Only</option>
@@ -149,20 +153,36 @@ const PostItemForm = ({ onPostSuccess }) => {
             </div>
           </div>
 
-          <div className="form-group" style={{ marginTop: '1.5rem' }}>
-            <label>Item Image</label>
-            <div className="image-upload-area" onClick={() => document.getElementById('image-upload').click()}>
+          <div className="form-group" style={{ marginTop: '2rem' }}>
+            <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Camera size={16} /> Item Image
+            </label>
+            <div 
+              onClick={() => document.getElementById('image-upload').click()}
+              style={{
+                border: '2px dashed var(--clay-border-2)',
+                borderRadius: 'var(--radius-lg)',
+                padding: imagePreview ? '1rem' : '3rem 1rem',
+                textAlign: 'center',
+                background: 'rgba(0,0,0,0.1)',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '1rem'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'rgba(6, 182, 212, 0.05)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--clay-border-2)'; e.currentTarget.style.background = 'rgba(0,0,0,0.1)'; }}
+            >
               {!imagePreview ? (
-                <div>
-                  <svg viewBox="0 0 24 24" width="32" height="32" stroke="var(--text-muted)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '0.5rem' }}>
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                    <polyline points="21 15 16 10 5 21"></polyline>
-                  </svg>
+                <>
+                  <Camera size={40} color="var(--text-muted)" />
                   <p style={{ color: 'var(--text-muted)', margin: 0 }}>Click to upload an image (JPG, PNG)</p>
-                </div>
+                </>
               ) : (
-                <img src={imagePreview} alt="Preview" className="image-preview" />
+                <img src={imagePreview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '250px', borderRadius: '12px', objectFit: 'cover' }} />
               )}
             </div>
             <input 
@@ -174,8 +194,8 @@ const PostItemForm = ({ onPostSuccess }) => {
             />
           </div>
 
-          <button type="submit" className="submit-btn" disabled={isSubmitting} style={{ marginTop: '1.5rem', width: '100%' }}>
-            {isSubmitting ? 'Posting...' : 'Post Item'}
+          <button type="submit" className="btn btn-primary btn-full" disabled={isSubmitting} style={{ marginTop: '2rem' }}>
+            {isSubmitting ? <><span className="spinner"></span></> : <><Send size={18} /> Post Item</>}
           </button>
         </form>
       </div>

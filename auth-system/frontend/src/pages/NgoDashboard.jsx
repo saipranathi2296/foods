@@ -3,10 +3,9 @@ import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import NgoSidebar from '../components/NgoSidebar';
 import FoodRequests from '../components/FoodRequests';
-import '../styles/MessDashboard.css'; // Reusing dashboard layout wrapper
 
 const NgoDashboard = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState('food-requests');
 
   if (!user || user.role !== 'ngo') {
@@ -21,17 +20,19 @@ const NgoDashboard = () => {
   };
 
   return (
-    <div className="dashboard-layout">
-      <NgoSidebar activeTab={activeTab} setActiveTab={setActiveTab} onLogout={logout} />
+    <div style={{ display: 'flex', flexDirection: 'column', padding: '0 2rem', gap: '2rem', minHeight: '80vh', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
+      <header style={{ marginBottom: '1rem' }}>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '0.25rem' }}>NGO Dashboard</h1>
+        <p style={{ color: 'var(--accent)' }}>View and claim available leftover food dynamically.</p>
+      </header>
       
-      <main className="dashboard-content">
-        <div className="dashboard-header">
-          <h1>NGO Dashboard</h1>
-          <p>Welcome back, {user.name}. View and claim available leftover food.</p>
-        </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '2rem', alignItems: 'start' }}>
+        <NgoSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         
-        {renderContent()}
-      </main>
+        <main className="clay-panel" style={{ minHeight: '600px' }}>
+          {renderContent()}
+        </main>
+      </div>
     </div>
   );
 };
