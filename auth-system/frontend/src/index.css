@@ -1,34 +1,34 @@
 /* ══════════════════════════════════════════════
-   FoodShare — Claymorphism Design System (Aqua)
+   FoodShare — Claymorphism Design System (Sunset Pink & Orange)
    ══════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
   /* ── Palette ── */
-  --clay-bg:        #081b22; /* Deep aqua/teal dark background */
-  --clay-surface:   #0f2b36;
-  --clay-card:      #153846;
-  --clay-card-2:    #1b4656;
-  --clay-border:    rgba(255,255,255,0.08);
-  --clay-border-2:  rgba(255,255,255,0.14);
+  --clay-bg:        #1f141a; /* Deep plum/pink dark background */
+  --clay-surface:   #2a1b24;
+  --clay-card:      #33202b;
+  --clay-card-2:    #3d2533;
+  --clay-border:    rgba(255, 143, 163, 0.08);
+  --clay-border-2:  rgba(255, 143, 163, 0.14);
 
-  /* ── Accent (Aqua Variants) ── */
-  --accent:         #06b6d4; /* Cyan-500 */
-  --accent-2:       #22d3ee; /* Cyan-400 */
-  --accent-3:       #0891b2; /* Cyan-600 */
+  /* ── Accent (Light Pink & Light Orange) ── */
+  --accent:         #ff8fa3; /* Light Pink */
+  --accent-2:       #ffb3c6; /* Lighter Pink */
+  --accent-3:       #ff4d6d; /* Deep Pink */
   --accent-green:   #10b981; /* Emerald-500 */
-  --accent-orange:  #f59e0b; /* Amber-500 */
+  --accent-orange:  #ffb38a; /* Light Orange */
   --accent-yellow:  #fbbf24; /* Amber-400 */
 
   /* ── Gradients ── */
-  --grad-primary:   linear-gradient(135deg, #06b6d4 0%, #22d3ee 50%, #67e8f9 100%);
-  --grad-pink:      linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+  --grad-primary:   linear-gradient(135deg, #ff8fa3 0%, #ffb38a 100%);
+  --grad-pink:      linear-gradient(135deg, #ff4d6d 0%, #ff8fa3 100%);
   --grad-green:     linear-gradient(135deg, #34d399 0%, #10b981 100%);
-  --grad-orange:    linear-gradient(135deg, #fb923c 0%, #f97316 100%);
-  --grad-dark:      linear-gradient(135deg, #0f2b36 0%, #153846 100%);
-  --grad-card:      linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(34, 211, 238, 0.04) 100%);
-  --grad-glass:     linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%);
+  --grad-orange:    linear-gradient(135deg, #fb923c 0%, #ffb38a 100%);
+  --grad-dark:      linear-gradient(135deg, #2a1b24 0%, #33202b 100%);
+  --grad-card:      linear-gradient(135deg, rgba(255, 143, 163, 0.08) 0%, rgba(255, 179, 138, 0.04) 100%);
+  --grad-glass:     linear-gradient(135deg, rgba(255, 143, 163, 0.07) 0%, rgba(255, 179, 138, 0.02) 100%);
 
   /* ── Typography ── */
   --font-body:      'Outfit', system-ui, sans-serif;
@@ -38,9 +38,9 @@
   --shadow-sm:      0 4px 16px rgba(0,0,0,0.3), 0 1px 4px rgba(0,0,0,0.2);
   --shadow-md:      0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3);
   --shadow-lg:      0 16px 48px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3);
-  --shadow-glow:    0 0 40px rgba(6, 182, 212, 0.2);
-  --shadow-clay:    0 8px 32px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.2), inset 0 -2px 0 rgba(0,0,0,0.2);
-  --shadow-clay-lg: 0 16px 56px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.2), inset 0 -2px 0 rgba(0,0,0,0.2);
+  --shadow-glow:    0 0 40px rgba(255, 143, 163, 0.2);
+  --shadow-clay:    0 8px 32px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255, 255, 255, 0.15), inset 0 -2px 0 rgba(0,0,0,0.2);
+  --shadow-clay-lg: 0 16px 56px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255, 255, 255, 0.15), inset 0 -2px 0 rgba(0,0,0,0.2);
 
   /* ── Radius ── */
   --radius-sm:   10px;
@@ -50,13 +50,13 @@
   --radius-pill: 100px;
 
   /* ── Semantic ── */
-  --text-primary:   #ebf8fa;
-  --text-secondary: #a1d1db;
-  --text-muted:     #689ea9;
+  --text-primary:   #ffeeef;
+  --text-secondary: #f4cdd5;
+  --text-muted:     #b08b96;
   --danger:         #f87171;
   --success:        #10b981;
-  --warning:        #f59e0b;
-  --info:           #06b6d4;
+  --warning:        #ffb38a; /* Adjusted warning to match theme */
+  --info:           #ff8fa3; /* Adjusted info to match theme */
 }
 
 /* ── Reset ── */
@@ -118,11 +118,9 @@ input, select, textarea {
 
 .page-transition-enter {
   animation: pixelateIn 0.6s cubic-bezier(0.22,1,0.36,1) both;
-  /* Basic fallback if SVG filter is missing */
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
 
-/* Let's define a mosaic pixel transition fallback using steps */
 @keyframes stepReveal {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
@@ -149,21 +147,21 @@ input, select, textarea {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: inset 0 2px 4px rgba(255,255,255,0.1), inset 0 -4px 8px rgba(0,0,0,0.4);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.05), inset 0 -4px 8px rgba(0,0,0,0.4);
   pointer-events: none;
 }
 
 .clay-card-inset {
-  background: rgba(0,0,0,0.15);
+  background: rgba(0,0,0,0.25);
   border-radius: var(--radius-md);
   padding: 1.25rem;
-  box-shadow: inset 0 4px 8px rgba(0,0,0,0.3);
+  box-shadow: inset 0 4px 8px rgba(0,0,0,0.4);
 }
 
 .clay-panel {
   background: var(--clay-card);
   border-radius: var(--radius-xl);
-  box-shadow: 10px 10px 20px rgba(0,0,0,0.3), -10px -10px 20px rgba(255,255,255,0.05);
+  box-shadow: 10px 10px 20px rgba(0,0,0,0.3), -10px -10px 20px rgba(255,255,255,0.02);
   padding: 2rem;
   position: relative;
 }
@@ -189,25 +187,26 @@ input, select, textarea {
 .form-input, .form-select, .form-textarea {
   width: 100%;
   padding: 0.85rem 1.1rem;
-  background: rgba(0,0,0,0.15);
+  background: rgba(0,0,0,0.25);
   border: none;
   border-radius: var(--radius-sm);
   color: var(--text-primary);
   font-size: 0.95rem;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.3), 0 1px 0 rgba(255,255,255,0.05);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.05);
   transition: all 0.2s;
 }
 
 .form-input:focus, .form-select:focus, .form-textarea:focus {
-  background: rgba(0,0,0,0.25);
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.4), 0 0 0 2px var(--accent);
+  background: rgba(0,0,0,0.35);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), 0 0 0 2px var(--accent);
 }
 
 .form-input::placeholder, .form-textarea::placeholder { color: var(--text-muted); }
 
 .form-select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%2306b6d4' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'/%3E%3C/svg%3E");
+  /* Pink icon */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%23ff8fa3' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.85rem center;
   background-size: 1.1em;
@@ -253,11 +252,11 @@ input, select, textarea {
 
 .btn-primary {
   background: var(--grad-primary);
-  color: #081b22;
-  box-shadow: 4px 4px 12px rgba(6, 182, 212, 0.4), inset 0 2px 0 rgba(255,255,255,0.4);
+  color: #1f141a;
+  box-shadow: 4px 4px 12px rgba(255, 143, 163, 0.4), inset 0 2px 0 rgba(255,255,255,0.4);
 }
 .btn-primary:hover {
-  box-shadow: 6px 6px 16px rgba(6, 182, 212, 0.5), inset 0 2px 0 rgba(255,255,255,0.5);
+  box-shadow: 6px 6px 16px rgba(255, 143, 163, 0.5), inset 0 2px 0 rgba(255,255,255,0.5);
 }
 
 .btn-danger {
@@ -296,9 +295,10 @@ input, select, textarea {
   letter-spacing: 0.5px;
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 0 1px 2px rgba(255,255,255,0.05);
 }
-.badge-aqua   { background: rgba(6,182,212,0.15); color: var(--accent); }
+/* Re-purposed aqua class to match pink accent to prevent breaking component classnames */
+.badge-aqua   { background: rgba(255,143,163,0.15); color: var(--accent); }
 .badge-green  { background: rgba(16,185,129,0.15); color: var(--success); }
-.badge-orange { background: rgba(245,158,11,0.15); color: var(--warning); }
+.badge-orange { background: rgba(255,179,138,0.15); color: var(--accent-orange); }
 .badge-red    { background: rgba(248,113,113,0.15); color: var(--danger); }
 
 /* ══════════════════════════
@@ -317,7 +317,7 @@ input, select, textarea {
 }
 .alert-error  { background: rgba(248,113,113,0.15); color: #fca5a5; }
 .alert-success{ background: rgba(16,185,129,0.15); color: #6ee7b7; }
-.alert-info   { background: rgba(6,182,212,0.15); color: #a5f3fc; }
+.alert-info   { background: rgba(255,143,163,0.15); color: #ffb3c6; }
 
 /* ══════════════════════════
     SCROLLBAR
@@ -347,8 +347,8 @@ input, select, textarea {
   position: fixed;
   inset: 0;
   background-image: 
-    linear-gradient(rgba(6, 182, 212, 0.03) 2px, transparent 2px),
-    linear-gradient(90deg, rgba(6, 182, 212, 0.03) 2px, transparent 2px);
+    linear-gradient(rgba(255, 143, 163, 0.05) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255, 143, 163, 0.05) 2px, transparent 2px);
   background-size: 40px 40px;
   pointer-events: none;
   z-index: -1;
@@ -358,12 +358,12 @@ input, select, textarea {
   position: fixed;
   border-radius: 50%;
   filter: blur(80px);
-  opacity: 0.3;
+  opacity: 0.25;
   z-index: -2;
   pointer-events: none;
 }
-.blob-1 { top: -10vw; left: -10vw; width: 40vw; height: 40vw; background: #06b6d4; }
-.blob-2 { bottom: -10vw; right: -10vw; width: 30vw; height: 30vw; background: #10b981; }
+.blob-1 { top: -10vw; left: -10vw; width: 40vw; height: 40vw; background: #ff8fa3; }
+.blob-2 { bottom: -10vw; right: -10vw; width: 30vw; height: 30vw; background: #ffb38a; }
 
 /* ══════════════════════════
     ANIMATED SVG FILTER FOR PIXELATION
