@@ -1,0 +1,25 @@
+/* Reusing styles from Login.css */
+@import './Login.css';
+
+/* Specific Signup styles if needed can go here */
+
+/* Add specific transition or margin for the larger signup form */
+.auth-card.signup-card {
+  max-width: 500px;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+}
+
+.col {
+  flex: 1;
+}
+
+@media (max-width: 480px) {
+  .row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

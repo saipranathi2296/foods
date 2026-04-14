@@ -1,0 +1,133 @@
+.food-requests-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.requests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.food-card {
+  background-color: var(--surface);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.food-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+}
+
+.food-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.food-title {
+  font-size: 1.25rem;
+  color: var(--text-main);
+  margin: 0 0 0.25rem 0;
+}
+
+.food-type-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.type-veg {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--secondary);
+}
+
+.type-nonveg {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+
+.food-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.detail-row svg {
+  color: var(--text-light);
+}
+
+.food-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.action-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.btn-accept {
+  background-color: var(--primary);
+  color: white;
+}
+.btn-accept:hover { background-color: var(--primary-hover); }
+
+.btn-reject {
+  background-color: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+.btn-reject:hover { 
+  background-color: var(--danger);
+  color: white;
+}
+
+.btn-collect {
+  background-color: var(--secondary);
+  color: white;
+}
+.btn-collect:hover { opacity: 0.9; }
+
+.status-badge {
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.5rem;
+  border-radius: 6px;
+  text-align: center;
+  width: 100%;
+}
+
+.status-pending { background-color: rgba(245, 158, 11, 0.1); color: #D97706; }
+.status-requested { background-color: rgba(245, 158, 11, 0.2); color: #B45309; }
+.status-accepted { background-color: rgba(79, 70, 229, 0.1); color: var(--primary); }
+.status-collected { background-color: rgba(16, 185, 129, 0.1); color: var(--secondary); }
+.status-completed { background-color: rgba(5, 150, 105, 0.2); color: #059669; }
+.status-rejected { background-color: rgba(239, 68, 68, 0.1); color: var(--danger); }

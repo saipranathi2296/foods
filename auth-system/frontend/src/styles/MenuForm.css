@@ -1,0 +1,85 @@
+.form-container {
+  max-width: 800px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.menu-items-section {
+  margin-top: 2rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+}
+
+.menu-item-card {
+  background-color: rgba(243, 244, 246, 0.5);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.remove-item-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  color: var(--danger);
+  background: none;
+  font-size: 0.875rem;
+  padding: 0.25rem;
+  border-radius: 4px;
+}
+
+.remove-item-btn:hover {
+  background-color: #FEE2E2;
+}
+
+.add-item-btn {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--secondary);
+  border: 1px dashed var(--secondary);
+  padding: 0.75rem;
+  border-radius: 8px;
+  width: 100%;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  transition: all 0.2s;
+}
+
+.add-item-btn:hover {
+  background-color: rgba(16, 185, 129, 0.2);
+}
+
+.submit-btn {
+  background-color: var(--primary);
+  color: white;
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.submit-btn:hover {
+  background-color: var(--primary-hover);
+}
+
+.menu-list {
+  margin-top: 3rem;
+}
+
+.menu-list-card {
+  border-left: 4px solid var(--primary);
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

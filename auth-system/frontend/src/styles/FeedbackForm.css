@@ -1,0 +1,100 @@
+.daily-menu-container {
+  max-width: 800px;
+}
+
+.menu-date {
+  font-size: 1.25rem;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.meal-section {
+  margin-bottom: 2rem;
+}
+
+.meal-title {
+  font-size: 1.125rem;
+  color: var(--text-main);
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  text-transform: capitalize;
+}
+
+.food-item-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-details h4 {
+  margin: 0 0 0.25rem 0;
+  color: var(--text-main);
+  font-size: 1.1rem;
+}
+
+.options-text {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.feedback-section {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.feedback-btn {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.btn-complete {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--secondary);
+}
+.btn-complete:hover, .btn-complete.active {
+  background-color: var(--secondary);
+  color: white;
+}
+
+.btn-partial {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #D97706;
+}
+.btn-partial:hover, .btn-partial.active {
+  background-color: #F59E0B;
+  color: white;
+}
+
+.btn-none {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+.btn-none:hover, .btn-none.active {
+  background-color: var(--danger);
+  color: white;
+}
+
+@media (max-width: 640px) {
+  .food-item-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .feedback-section {
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: space-between;
+  }
+}
